@@ -30,5 +30,46 @@ export const posts = mysqlTable(
   },
   (example) => ({
     nameIndex: index("name_idx").on(example.name),
-  })
+  }),
+);
+
+export const users = mysqlTable(
+  "user",
+  {
+    id: varchar("id", { length: 256 }).primaryKey(),
+    email: varchar("email", { length: 256 }),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt").onUpdateNow(),
+  },
+  (example) => ({
+    nameIndex: index("name_idx").on(example.email),
+  }),
+);
+
+export const property = mysqlTable(
+  "property",
+  {
+    // Id Fields
+    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+    userId: varchar("id", { length: 256 }).notNull(),
+
+    //Address Fields
+    streetAddress: varchar("street_address", { length: 256 }).notNull(),
+    streetAddress2: varchar("street_address2", { length: 256 }),
+    city: varchar("city", { length: 256 }).notNull(),
+    state: varchar("state", { length: 256 }).notNull(),
+    zip: varchar("zip", { length: 256 }).notNull(),
+    country: varchar("country", { length: 256 }),
+
+    //Financial Fields
+    ehv: bigint("ehv", { mode: "number" }),
+    mb: bigint("mb", { mode: "number" }),
+    ltv: bigint("ltv", { mode: "number" }),
+    liens: bigint("liens", { mode: "number" }),
+  },
+  (table) => ({
+    nameIndex: index("name_idx").on(table.userId),
+  }),
 );

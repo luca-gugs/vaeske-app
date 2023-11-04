@@ -6,7 +6,9 @@ import { type AppRouter } from "~/server/api/root";
 export const transformer = superjson;
 
 function getBaseUrl() {
-  if (typeof window !== "undefined") return "";
+  // if (typeof window !== "undefined") {
+  //   return ""; // This code will only run on the client side
+  // }
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
