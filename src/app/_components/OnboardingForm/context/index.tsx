@@ -54,7 +54,7 @@ const OnboardingContext = createContext<OnboardingContextType>({
 export const OnboardingProvider: React.FC<{
   children: ReactNode;
 }> = ({ children }) => {
-  const [step, setStep] = useState(5);
+  const [step, setStep] = useState(0);
   const {
     control,
     register,
