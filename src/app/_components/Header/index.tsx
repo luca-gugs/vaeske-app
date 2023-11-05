@@ -75,11 +75,11 @@ export const Header = () => {
                   <div className="flex items-center space-x-4">
                     {navigation.map((item) => {
                       const linkIsCurrentPath = pathname === item.href;
-                      const isHovered = hoveredLink === item.href;
+                      const isHovered = hoveredLink === item.name;
                       return (
                         <div
-                          key={item.href}
-                          onMouseOver={() => setHoveredLink(item.href)}
+                          key={item.name}
+                          onMouseOver={() => setHoveredLink(item.name)}
                           onMouseLeave={() => setHoveredLink(null)}
                         >
                           <RoughNotation

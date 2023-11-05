@@ -3,6 +3,9 @@ import Link from "next/link";
 import { CreatePost } from "~/app/_components/create-post";
 import { api } from "~/trpc/server";
 import { Header } from "./_components/Header";
+import { redirect } from "next/navigation";
+import { currentUser } from "@clerk/nextjs";
+import { UserProvider } from "./_contexts/userContext";
 
 // export default async function Home() {
 //   const hello = await api.post.hello.query({ text: "from tRPC" });
@@ -49,10 +52,27 @@ import { Header } from "./_components/Header";
 //   );
 // }
 
-export default function Home() {
+export default async function Home() {
+  const user = await currentUser();
+  const userProfile = await api.user.getCurrent.query();
+
+  console.log("USER: ", userProfile);
+
+  if (!userProfile?.id) {
+    redirect("/onboard");
+  }
+
+  // const dbUser = await db.user.findFirst({
+  //   where: {
+  //     id: user.id,
+  //   },
+  // });
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-white">
       <Header />
+      <UserProvider user={user}>
+        <div></div>
+      </UserProvider>
     </main>
   );
 }
