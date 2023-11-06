@@ -6,7 +6,7 @@ export const ProgressBar = () => {
   const { step, finish } = useOnboardingContext();
   const totalSteps = finish ? 4 : 5;
   const percent = Number((step / totalSteps) * 100).toFixed(0);
-
+  // refire deploy
   return (
     <div className="absolute top-0 h-[8px] w-full bg-slate-200">
       <div
