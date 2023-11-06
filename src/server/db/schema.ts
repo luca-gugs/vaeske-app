@@ -4,6 +4,7 @@
 import { sql } from "drizzle-orm";
 import {
   bigint,
+  float,
   index,
   mysqlTableCreator,
   timestamp,
@@ -37,7 +38,8 @@ export const users = mysqlTable(
   "user",
   {
     id: varchar("id", { length: 256 }).primaryKey(),
-    email: varchar("email", { length: 256 }),
+    email: varchar("email", { length: 256 }).notNull(),
+    type: varchar("type", { length: 256 }).notNull(),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -53,7 +55,7 @@ export const property = mysqlTable(
   {
     // Id Fields
     id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-    userId: varchar("id", { length: 256 }).notNull(),
+    userId: varchar("userId", { length: 256 }).notNull(),
 
     //Address Fields
     streetAddress: varchar("street_address", { length: 256 }).notNull(),
@@ -66,7 +68,7 @@ export const property = mysqlTable(
     //Financial Fields
     ehv: bigint("ehv", { mode: "number" }),
     mb: bigint("mb", { mode: "number" }),
-    ltv: bigint("ltv", { mode: "number" }),
+    ltv: float("ltv"),
     liens: bigint("liens", { mode: "number" }),
   },
   (table) => ({

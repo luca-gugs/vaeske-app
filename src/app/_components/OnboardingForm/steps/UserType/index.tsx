@@ -1,6 +1,7 @@
 import { use, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useOnboardingContext } from "../../context";
+import { redirect } from "next/navigation";
 
 type Inputs = {
   streetAddress: string;

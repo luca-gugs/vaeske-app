@@ -22,8 +22,8 @@ export const OnboardingForm = () => {
       return <MortgageBalance />;
     case 4:
       return <DesiredCash />;
-    case 5:
-      return <Submit />;
+    // case 5:
+    //   return <Submit />;
     // case 6:
     //   return <div>6</div>;
     default:

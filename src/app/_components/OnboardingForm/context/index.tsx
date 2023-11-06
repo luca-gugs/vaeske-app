@@ -3,6 +3,7 @@ import { ReactNode, createContext, useContext, useState } from "react";
 import {
   Control,
   FieldErrors,
+  UseFormHandleSubmit,
   UseFormRegister,
   UseFormSetFocus,
   UseFormSetValue,
@@ -29,6 +30,8 @@ export type KeyState = {
 };
 
 interface OnboardingContextType {
+  finish: boolean;
+  setFinish: (finish: boolean) => void;
   step: number;
   setStep: (step: number) => void;
   register: UseFormRegister<KeyState> | null;
@@ -38,9 +41,12 @@ interface OnboardingContextType {
   setFocus: UseFormSetFocus<KeyState> | null;
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
   control: Control<KeyState, any> | null;
+  handleSubmit: UseFormHandleSubmit<KeyState, undefined> | null;
 }
 
 const OnboardingContext = createContext<OnboardingContextType>({
+  finish: false,
+  setFinish: () => null,
   step: 0,
   setStep: () => null,
   register: null,
@@ -49,12 +55,14 @@ const OnboardingContext = createContext<OnboardingContextType>({
   watch: null,
   setFocus: null,
   control: null,
+  handleSubmit: null,
 });
 
 export const OnboardingProvider: React.FC<{
   children: ReactNode;
 }> = ({ children }) => {
   const [step, setStep] = useState(0);
+  const [finish, setFinish] = useState(false);
   const {
     control,
     register,
@@ -80,10 +88,12 @@ export const OnboardingProvider: React.FC<{
       desiredCashout: 0,
     },
   });
+
   return (
     <OnboardingContext.Provider
       value={{
         control,
+        handleSubmit,
         step,
         setStep,
         register,
@@ -91,6 +101,8 @@ export const OnboardingProvider: React.FC<{
         setValue,
         watch,
         setFocus,
+        finish,
+        setFinish,
       }}
     >
       {children}
