@@ -12,16 +12,16 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-import { SignedIn, UserButton } from "@clerk/nextjs";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { usePathname, useRouter } from "next/navigation";
 import { RoughNotation } from "react-rough-notation";
+import Link from "next/link";
 
 //Work In Progress Nav Based off component in tailwind ui.
 export const Header = () => {
   const pathname = usePathname();
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
 
-  console.log({ pathname });
   return (
     <Disclosure
       as="nav"
@@ -67,9 +67,11 @@ export const Header = () => {
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
-                  <h2 className="text-3xl font-normal tracking-[-2px]">
-                    væske.
-                  </h2>
+                  <Link href="/home">
+                    <h2 className="text-3xl font-normal tracking-[-2px]">
+                      væske.
+                    </h2>
+                  </Link>
                 </div>
                 <div className="hidden items-center sm:ml-6 sm:flex">
                   <div className="flex items-center space-x-4">
@@ -107,28 +109,16 @@ export const Header = () => {
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    {/* <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                      <span className="absolute -inset-1.5" />
-                      <span className="sr-only">Open user menu</span>
-                      <SignedIn>
-                        <UserButton />
-                      </SignedIn>
-                      <SignedOut>
-                        <SignInButton>
-                          <button className="bg-white ">Sign In</button>
-                        </SignInButton>
-                      </SignedOut>
-                    </Menu.Button> */}
                     <SignedIn>
-                      {/* Mount the UserButton component */}
                       <UserButton />
                     </SignedIn>
-                    {/* <SignedOut>
-                      Signed out users get sign in button
+                    <SignedOut>
                       <SignInButton>
-                        <button className="bg-white ">Sign In</button>
+                        <button className="rounded-lg bg-black px-4 py-2 text-white">
+                          Dashboard
+                        </button>
                       </SignInButton>
-                    </SignedOut> */}
+                    </SignedOut>
                   </div>
                   <Transition
                     as={Fragment}

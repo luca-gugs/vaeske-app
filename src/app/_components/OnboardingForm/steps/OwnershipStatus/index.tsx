@@ -15,7 +15,6 @@ export const UserType = () => {
   // const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
 
   const isDisabled = !watch || watch("type") === "" ? true : false;
-  console.log("isDisabled: ", isDisabled);
   if (register && watch) {
     return (
       <>

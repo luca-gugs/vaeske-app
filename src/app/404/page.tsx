@@ -2,10 +2,9 @@ import Link from "next/link";
 
 import { CreatePost } from "~/app/_components/create-post";
 import { api } from "~/trpc/server";
-import { Header } from "./_components/Header";
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
-import { UserProvider } from "./_contexts/userContext";
+import { Header } from "../_components/Header";
 
 // export default async function Home() {
 //   const hello = await api.post.hello.query({ text: "from tRPC" });
@@ -52,16 +51,7 @@ import { UserProvider } from "./_contexts/userContext";
 //   );
 // }
 
-export default async function Dashboard() {
-  const user = await currentUser();
-  const userProfile = await api.user.getCurrent.query({ getProperties: true });
-
-  console.log("USER: ", userProfile);
-
-  if (!userProfile?.user?.id) {
-    redirect("/onboard");
-  }
-
+export default function Dashboard() {
   // const dbUser = await db.user.findFirst({
   //   where: {
   //     id: user.id,
@@ -70,51 +60,7 @@ export default async function Dashboard() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-white">
       <Header />
-
-      <div className="w-300px">
-        <h1 className="text-xl">User Object</h1>
-        <div className="space-between flex">
-          <span>Email:</span>
-          <span>{userProfile?.user?.email}</span>
-        </div>
-        <div className="space-between flex">
-          <span>Type:</span>
-          <span>{userProfile?.user?.type}</span>
-        </div>
-      </div>
-
-      <div className="w-300px mt-[80px]">
-        <h1 className="text-xl">Properties Array</h1>
-        {userProfile?.properties?.map((property) => {
-          return (
-            <>
-              <div className="space-between flex">
-                <span>Addr:</span>
-                <span>
-                  {property?.streetAddress}, {property?.city}, {property?.state}
-                  , {property?.zip}
-                </span>
-              </div>
-              <div className="space-between flex">
-                <span>EHV:</span>
-                <span>{property?.ehv}</span>
-              </div>
-              <div className="space-between flex">
-                <span>MB:</span>
-                <span>{property?.mb}</span>
-              </div>
-              <div className="space-between flex">
-                <span>LTV:</span>
-                <span>{property?.ltv}</span>
-              </div>
-              <div className="space-between flex">
-                <span>Liens:</span>
-                <span>{property?.liens}</span>
-              </div>
-            </>
-          );
-        })}
-      </div>
+      <div className="text-3xl">404</div>
     </main>
   );
 }

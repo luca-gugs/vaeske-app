@@ -6,7 +6,7 @@ import {
   privateProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { posts, users } from "~/server/db/schema";
+import { posts, users, property } from "~/server/db/schema";
 import { clerkClient } from "@clerk/nextjs/server";
 
 export const userRouter = createTRPCRouter({
@@ -31,13 +31,43 @@ export const userRouter = createTRPCRouter({
       return user;
     }),
 
-  getCurrent: publicProcedure.query(async ({ ctx }) => {
-    const [user] = await clerkClient.users.getUserList({
-      userId: [ctx?.userId ?? ""],
-    });
-    console.log("USER: ", user);
-    return ctx.db.query.users.findFirst({
-      where: eq(users.id, user?.id ?? "1"),
-    });
-  }),
+  getCurrent: publicProcedure
+    .input(
+      z
+        .object({ getProperties: z.boolean().nullable().default(false) })
+        .nullable(),
+    )
+    .query(async ({ ctx, input }) => {
+      const [user] = await clerkClient.users.getUserList({
+        userId: [ctx?.userId ?? ""],
+      });
+      const _user = await ctx.db.query.users.findFirst({
+        where: eq(users.id, user?.id ?? "1"),
+      });
+      let properties: {
+        userId: string;
+        id: number;
+        streetAddress: string;
+        streetAddress2: string | null;
+        city: string;
+        state: string;
+        zip: string;
+        country: string | null;
+        ehv: number | null;
+        mb: number | null;
+        ltv: number | null;
+        liens: number | null;
+      }[] = [];
+
+      if (input?.getProperties) {
+        properties = await ctx.db.query.property.findMany({
+          where: eq(property.userId, user?.id ?? "1"),
+        });
+      }
+
+      return {
+        user: _user,
+        properties: properties,
+      };
+    }),
 });

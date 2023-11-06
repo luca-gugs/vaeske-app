@@ -80,7 +80,6 @@ export const DesiredCash = () => {
         setEmoji("🍲");
       }, 1500);
       setTimeout(() => {
-        console.log("HERES JOHNNy");
         router.refresh();
       }, 1000);
     }
@@ -88,7 +87,6 @@ export const DesiredCash = () => {
 
   //SUBMIT ONBOARDING FORM
   const onSubmit: SubmitHandler<KeyState> = (data) => {
-    console.log("wow", data);
     setLoading(10);
     setFinish(true);
     //property stuff -- destructuring

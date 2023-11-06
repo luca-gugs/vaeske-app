@@ -49,6 +49,7 @@ export const propertyRouter = createTRPCRouter({
         ltv: ltv,
         liens: liens,
       });
+      console.log("NEW PROPERTY: ", newProperty);
       return newProperty;
     }),
 

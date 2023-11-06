@@ -209,7 +209,6 @@ export const UserType = () => {
   }, [setFocus]);
 
   const isDisabled = !watch || watch("type") === "" ? true : false;
-  console.log("isDisabled: ", isDisabled);
   if (register && watch) {
     return (
       <>
