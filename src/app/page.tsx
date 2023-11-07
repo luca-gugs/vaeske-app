@@ -6,6 +6,7 @@ import { Header } from "./_components/Header";
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
 import { UserProvider } from "./_contexts/userContext";
+import { Suspense } from "react";
 
 // export default async function Home() {
 //   const hello = await api.post.hello.query({ text: "from tRPC" });
@@ -83,38 +84,40 @@ export default async function Dashboard() {
         </div>
       </div>
 
-      <div className="w-300px mt-[80px]">
-        <h1 className="text-xl">Properties Array</h1>
-        {userProfile?.properties?.map((property) => {
-          return (
-            <>
-              <div className="space-between flex">
-                <span>Addr:</span>
-                <span>
-                  {property?.streetAddress}, {property?.city}, {property?.state}
-                  , {property?.zip}
-                </span>
-              </div>
-              <div className="space-between flex">
-                <span>EHV:</span>
-                <span>{property?.ehv}</span>
-              </div>
-              <div className="space-between flex">
-                <span>MB:</span>
-                <span>{property?.mb}</span>
-              </div>
-              <div className="space-between flex">
-                <span>LTV:</span>
-                <span>{property?.ltv}</span>
-              </div>
-              <div className="space-between flex">
-                <span>Liens:</span>
-                <span>{property?.liens}</span>
-              </div>
-            </>
-          );
-        })}
-      </div>
+      <Suspense fallback={<p>Loading feed...</p>}>
+        <div className="w-300px mt-[80px]">
+          <h1 className="text-xl">Properties Array</h1>
+          {userProfile?.properties?.map((property) => {
+            return (
+              <>
+                <div className="space-between flex">
+                  <span>Addr:</span>
+                  <span>
+                    {property?.streetAddress}, {property?.city},{" "}
+                    {property?.state}, {property?.zip}
+                  </span>
+                </div>
+                <div className="space-between flex">
+                  <span>EHV:</span>
+                  <span>{property?.ehv}</span>
+                </div>
+                <div className="space-between flex">
+                  <span>MB:</span>
+                  <span>{property?.mb}</span>
+                </div>
+                <div className="space-between flex">
+                  <span>LTV:</span>
+                  <span>{property?.ltv}</span>
+                </div>
+                <div className="space-between flex">
+                  <span>Liens:</span>
+                  <span>{property?.liens}</span>
+                </div>
+              </>
+            );
+          })}
+        </div>
+      </Suspense>
     </main>
   );
 }
