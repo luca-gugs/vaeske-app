@@ -19,7 +19,13 @@ export const userRouter = createTRPCRouter({
     }),
 
   create: privateProcedure
-    .input(z.object({ email: z.string().min(1), type: z.string().min(1) }))
+    .input(
+      z.object({
+        email: z.string().min(1),
+        type: z.string().min(1),
+        creditScore: z.string().min(1),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call -- pls use to test ux
       // await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -27,6 +33,7 @@ export const userRouter = createTRPCRouter({
         id: ctx.userId,
         email: input.email,
         type: input.type,
+        creditScore: input.creditScore,
       });
       return user;
     }),

@@ -54,7 +54,7 @@ export const ControlPanel = ({}: ControlPanelProps) => {
                     key={item.link}
                     href={item.link}
                     className={`flex min-h-[58px] w-full items-center overflow-hidden rounded-[20px] p-[16px] text-lg font-semibold ${
-                      isActive ? "bg-blue-200" : ""
+                      isActive ? "bg-slate-100" : ""
                     }`}
                   >
                     <Image src={item.src} width={24} height={24} alt={""} />

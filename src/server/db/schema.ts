@@ -39,6 +39,7 @@ export const users = mysqlTable(
   {
     id: varchar("id", { length: 256 }).primaryKey(),
     email: varchar("email", { length: 256 }).notNull(),
+    creditScore: varchar("creditScore", { length: 256 }),
     type: varchar("type", { length: 256 }).notNull(),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)

@@ -96,6 +96,7 @@ export const DesiredCash = () => {
     createUser.mutate({
       email: user?.primaryEmailAddress?.emailAddress ?? "",
       type: data.type,
+      creditScore: data.creditScore,
     });
 
     createProperty.mutate({
@@ -130,6 +131,7 @@ export const DesiredCash = () => {
                   defaultValue={0}
                   render={({ field }) => (
                     <NumberInput
+                      id="desiredCash"
                       className="border-[1px] border-white p-1 text-2xl outline-none focus:border-[1px] focus:border-black"
                       {...field}
                       value={field.value.toString()}
@@ -158,7 +160,7 @@ export const DesiredCash = () => {
               <div
                 style={{ width: `${loading}%` }}
                 className="duration-800 h-[10px] rounded-full bg-violet-500 transition-all"
-              ></div>
+              />
             </div>
           </div>
         )}

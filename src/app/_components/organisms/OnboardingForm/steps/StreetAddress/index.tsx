@@ -56,6 +56,15 @@ export default function StreetAddress() {
     }
   };
 
+  const isDisabled =
+    !watch ||
+    watch("street") === "" ||
+    watch("city") === "" ||
+    watch("state") === "" ||
+    watch("zip") === ""
+      ? true
+      : false;
+
   if (register && watch) {
     return (
       /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
@@ -78,6 +87,7 @@ export default function StreetAddress() {
               type="text"
               className="w-full rounded-lg border border-black px-4 py-2 focus:border-green-500 focus:outline-none"
               placeholder="Street Addr."
+              autoComplete="off"
               //   autoill='off'
               {...register("street", { required: true })}
             />
@@ -185,7 +195,12 @@ export default function StreetAddress() {
 
           <div className="col-span-12 mt-[50px] flex items-center justify-between">
             <button
-              className="text-xl font-bold text-black outline-none transition-all hover:underline focus:underline"
+              disabled={isDisabled}
+              className={`${
+                isDisabled
+                  ? "text-slate-500"
+                  : "text-black hover:underline focus:underline"
+              } text-xl font-bold outline-none transition-all`}
               type="submit"
             >
               Next

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useOnboardingContext } from "../../context";
 
-export const UserType = () => {
+export const CreditScore = () => {
   const { errors, step, setStep, register, watch, setValue, setFocus } =
     useOnboardingContext();
 
@@ -10,8 +10,15 @@ export const UserType = () => {
       setFocus("type");
     }
   }, [setFocus]);
+  const creditScoreRanges = [
+    { label: "Excellent (750-850)", value: "excellent" },
+    { label: "Good (700-749)", value: "good" },
+    { label: "Fair (650-699)", value: "fair" },
+    { label: "Poor (600-649)", value: "poor" },
+    { label: "Bad (Below 600)", value: "bad" },
+  ];
 
-  const isDisabled = !watch || watch("type") === "" ? true : false;
+  const isDisabled = !watch || watch("creditScore") === "" ? true : false;
   if (register && watch) {
     return (
       <>
@@ -23,28 +30,19 @@ export const UserType = () => {
           }}
         >
           <h2 className="col-span-12 text-3xl font-medium">
-            Tell us about you
+            Whats your credit history?
           </h2>
 
           <div className="relative col-span-12 mt-[40px] flex items-center">
-            <div className="no-wrap flex min-w-[45px] text-xl font-semibold">
-              I am{" "}
-            </div>
-
             <select
               className="flex flex-grow rounded-lg border border-white px-1 py-2 pl-0 text-xl font-semibold focus:border-green-500 focus:outline-none"
-              {...register("type", { required: true })}
+              {...register("creditScore", { required: true })}
             >
-              <option value="homeOwner">a home owner</option>
-              <option value="reEmployee" disabled>
-                working for a real estate technology company
-              </option>
-              <option value="investor" disabled>
-                looking to invest in financial products
-              </option>
-              <option value="loan" disabled>
-                looking for a loan
-              </option>
+              {creditScoreRanges.map((range) => (
+                <option key={range.value} value={range.value}>
+                  {range.label}
+                </option>
+              ))}
             </select>
           </div>
 

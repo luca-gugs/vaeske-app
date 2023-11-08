@@ -16,6 +16,7 @@ import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { usePathname, useRouter } from "next/navigation";
 import { RoughNotation } from "react-rough-notation";
 import Link from "next/link";
+import { ButtonLink } from "../../atoms/ButtonLink";
 
 //Work In Progress Nav Based off component in tailwind ui.
 export const Header = () => {
@@ -109,16 +110,9 @@ export const Header = () => {
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <SignedIn>
-                      <UserButton />
-                    </SignedIn>
-                    <SignedOut>
-                      <SignInButton>
-                        <button className="rounded-lg bg-black px-4 py-2 text-white">
-                          App ⚡
-                        </button>
-                      </SignInButton>
-                    </SignedOut>
+                    <ButtonLink href="/" className={""}>
+                      App ⚡
+                    </ButtonLink>
                   </div>
                   <Transition
                     as={Fragment}

@@ -15,18 +15,19 @@ export type KeyState = {
   //User Type
   type: string; //Step 1
   ownershipStatusCheck: boolean; //Step 1
+  creditScore: string;
 
   //Property Values
-  street: string; //Step 2
-  street2: string; //Step 2
-  city: string; //Step 2
-  state: string; //Step 2
-  zip: string; //Step 2
+  street: string; //Step 3
+  street2: string; //Step 3
+  city: string; //Step 3
+  state: string; //Step 3
+  zip: string; //Step 3
 
   //Financial Values
-  estimatedHomeValue: number; //Step 3
-  mortgageBalance: number; //Step 4
-  desiredCashout: number; //Step 5
+  estimatedHomeValue: number; //Step 4
+  mortgageBalance: number; //Step 5
+  desiredCashout: number; //Step 6
 };
 
 interface OnboardingContextType {
@@ -74,7 +75,8 @@ export const OnboardingProvider: React.FC<{
   } = useForm({
     defaultValues: {
       // User Type
-      type: "",
+      type: "homeOwner",
+      creditScore: "good",
       ownershipStatusCheck: true,
       // Address Values
       street: "",

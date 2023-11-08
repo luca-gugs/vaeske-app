@@ -7,6 +7,7 @@ import { EstimatedHomeValue } from "./steps/EHV";
 import { MortgageBalance } from "./steps/MortgageBalance";
 import { DesiredCash } from "./steps/DesiredCash";
 import { Submit } from "./submit";
+import { CreditScore } from "./steps/CreditScore";
 
 //TODO Create Credit Score Step
 export const OnboardingForm = () => {
@@ -15,12 +16,14 @@ export const OnboardingForm = () => {
     case 0:
       return <UserType />;
     case 1:
-      return <StreetAddress />;
+      return <CreditScore />;
     case 2:
-      return <EstimatedHomeValue />;
+      return <StreetAddress />;
     case 3:
-      return <MortgageBalance />;
+      return <EstimatedHomeValue />;
     case 4:
+      return <MortgageBalance />;
+    case 5:
       return <DesiredCash />;
     // case 5:
     //   return <Submit />;
