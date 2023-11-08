@@ -8,7 +8,7 @@ import {
 } from "~/server/api/trpc";
 import { posts, users, property } from "~/server/db/schema";
 import { clerkClient } from "@clerk/nextjs/server";
-import StreetAddress from "../../../app/_components/OnboardingForm/steps/StreetAddress/index";
+import StreetAddress from "../../../app/_components/organisms/OnboardingForm/steps/StreetAddress/index";
 
 export const propertyRouter = createTRPCRouter({
   //   hello: publicProcedure

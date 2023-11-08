@@ -4,7 +4,7 @@ import { CreatePost } from "~/app/_components/create-post";
 import { api } from "~/trpc/server";
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
-import { Header } from "../_components/Header";
+import { Header } from "../_components/organisms/Header";
 
 // export default async function Home() {
 //   const hello = await api.post.hello.query({ text: "from tRPC" });

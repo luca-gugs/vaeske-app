@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { api } from "~/trpc/server";
-import { ControlPanel } from "./_components/organisms/ControlPanel";
+import { ControlPanel } from "../_components/organisms/ControlPanel";
 
-export default async function Dashboard() {
+export default async function Account() {
   const userProfile = await api.user.getCurrent.query({ getProperties: true });
 
   if (!userProfile?.user?.id) {
@@ -17,7 +17,8 @@ export default async function Dashboard() {
         <div className="grid w-full max-w-[1384px] grid-cols-12 justify-between gap-[16px] px-[20px] py-[32px] md:gap-[24px] md:p-[48px]">
           <Suspense fallback={<p>Loading feed...</p>}>
             <div className="col-span-12">
-              <h1 className="text-6xl font-bold">User Dashboard</h1>
+              <h1 className="text-6xl font-bold">Account Page</h1>
+              <p>A Page where users can see basic account info</p>
             </div>
             <div className="col-span-12 space-y-2">
               <h1 className="text-xl">Properties Array</h1>
@@ -57,19 +58,3 @@ export default async function Dashboard() {
     </main>
   );
 }
-
-// async function CrudShowcase() {
-//   const latestPost = await api.post.getLatest.query();
-
-//   return (
-//     <div className="w-full max-w-xs">
-//       {latestPost ? (
-//         <p className="truncate">Your most recent post: {latestPost.name}</p>
-//       ) : (
-//         <p>You have no posts yet.</p>
-//       )}
-
-//       <CreatePost />
-//     </div>
-//   );
-// }

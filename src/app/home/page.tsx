@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Header } from "../_components/Header";
+import { Header } from "../_components/organisms/Header";
 import Image from "next/image";
 import { Card } from "../_components/atoms/CardThing";
 import Link from "next/link";
@@ -29,7 +29,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-white">
       <Header />
       <div className="flex h-[calc(100vh)] w-full flex-col items-center justify-center">
-        <div className="animate-fade-in-down flex w-full flex-col space-y-6 px-8 md:w-[800px]">
+        <div className="flex w-full animate-fade-in-down flex-col space-y-6 px-8 md:w-[800px]">
           <h1 className="text-4xl transition-opacity">Welcome to væske.</h1>
           <p className="text-lg">
             væske is a new kind of real estate marketplace where we bring

@@ -1,5 +1,5 @@
 import { SignIn } from "@clerk/nextjs";
-import { Header } from "~/app/_components/Header";
+import { Header } from "~/app/_components/organisms/Header";
 
 export default function Page() {
   return (
