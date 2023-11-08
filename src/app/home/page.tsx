@@ -14,14 +14,14 @@ export default function Home() {
           </p>
           <div className="flex flex-col space-y-3 md:flex-row md:space-x-3 md:space-y-0">
             <ButtonLink
-              href="#"
+              href="homeowners"
               className="w-full text-xl transition-all hover:scale-105 md:w-1/2"
             >
               I am a home owner 🏡
             </ButtonLink>
             <ButtonLink
               secondary
-              href="#"
+              href="proptechs"
               className="w-full text-xl transition-all hover:scale-105 md:w-1/2"
             >
               I am a PropTech 👨‍💻
