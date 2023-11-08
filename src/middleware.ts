@@ -10,6 +10,11 @@ export default authMiddleware({
     "/for-owners",
     "/for-investors",
     "/create-organization",
+    "/team",
+    "/whitepaper",
+    "/roadmap",
+    "/homeowners",
+    "/proptechs",
   ],
 });
 
