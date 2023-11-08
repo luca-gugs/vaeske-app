@@ -29,23 +29,23 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-white">
       <Header />
       <div className="flex h-[calc(100vh)] w-full flex-col items-center justify-center">
-        <div className="animate-fade-in-down flex w-[800px] flex-col space-y-6 px-8">
+        <div className="animate-fade-in-down flex w-full flex-col space-y-6 px-8 md:w-[800px]">
           <h1 className="text-4xl transition-opacity">Welcome to væske.</h1>
           <p className="text-lg">
             væske is a new kind of real estate marketplace where we bring
             together homeowners & real estate investors to create a win-win
           </p>
-          <div className="flex space-x-3">
+          <div className="flex flex-col space-y-3 md:flex-row md:space-x-3 md:space-y-0">
             <ButtonLink
               href="#"
-              className="w-1/2 text-xl transition-all hover:scale-105"
+              className="w-full text-xl transition-all hover:scale-105 md:w-1/2"
             >
               I am a home owner 🏡
             </ButtonLink>
             <ButtonLink
               secondary
               href="#"
-              className="w-1/2 text-xl transition-all hover:scale-105"
+              className="w-full text-xl transition-all hover:scale-105 md:w-1/2"
             >
               I am a PropTech 👨‍💻
             </ButtonLink>

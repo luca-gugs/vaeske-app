@@ -115,7 +115,7 @@ export const Header = () => {
                     <SignedOut>
                       <SignInButton>
                         <button className="rounded-lg bg-black px-4 py-2 text-white">
-                          Dashboard
+                          App ⚡
                         </button>
                       </SignInButton>
                     </SignedOut>
