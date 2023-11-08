@@ -1,28 +1,20 @@
 "use client";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
-
-const navigation = [
-  { name: "Team", href: "#" },
-  { name: "White Paper", href: "#" },
-  { name: "Roadmap", href: "#" },
-];
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { usePathname, useRouter } from "next/navigation";
-import { RoughNotation } from "react-rough-notation";
+import { Disclosure, Menu } from "@headlessui/react";
+import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { RoughNotation } from "react-rough-notation";
 import { ButtonLink } from "../../atoms/ButtonLink";
 
 //Work In Progress Nav Based off component in tailwind ui.
 export const Header = () => {
   const pathname = usePathname();
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
-
+  const navigation = [
+    { name: "Team", href: "/team" },
+    { name: "White Paper", href: "/whitepaper" },
+    { name: "Roadmap", href: "/roadmap" },
+  ];
   return (
     <Disclosure
       as="nav"
@@ -114,7 +106,7 @@ export const Header = () => {
                       App ⚡
                     </ButtonLink>
                   </div>
-                  <Transition
+                  {/* <Transition
                     as={Fragment}
                     enter="transition ease-out duration-100"
                     enterFrom="transform opacity-0 scale-95"
@@ -164,7 +156,7 @@ export const Header = () => {
                         )}
                       </Menu.Item>
                     </Menu.Items>
-                  </Transition>
+                  </Transition> */}
                 </Menu>
               </div>
             </div>

@@ -1,30 +1,7 @@
-import { useEffect, useState } from "react";
-import { Header } from "../_components/organisms/Header";
-import Image from "next/image";
-import { Card } from "../_components/atoms/CardThing";
-import Link from "next/link";
 import { ButtonLink } from "../_components/atoms/ButtonLink";
-export default function Home() {
-  //   const food: [string, number, number, string, string, string][] = [
-  //     [
-  //       "🏠",
-  //       340,
-  //       10,
-  //       "For Home Owners",
-  //       "Rather than seeking out investment in your equity vaeske brings together investors to bid on you! Maximizing the value of your hard earned equity.",
-  //       "/for-owners",
-  //     ],
-  //     [
-  //       "💹",
-  //       100,
-  //       140,
-  //       "Real Estate Fin Techs & Investors",
-  //       "Vaeske allows Fin Techs and other lenders to set their own buybox and receive leads that match there bespoke criteria",
-  //       "/for-investors",
-  //     ],
-  //     [" ⁉️", 290, 320, "More Coming Soon!", "", "#"],
-  //   ];
+import { Header } from "../_components/organisms/Header";
 
+export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-white">
       <Header />
@@ -50,31 +27,8 @@ export default function Home() {
               I am a PropTech 👨‍💻
             </ButtonLink>
           </div>
-          {/* <div className="!mt-[80px] flex w-full flex-col items-center justify-center space-y-1 text-center">
-            <p className="text-sm">Scroll to learn more</p>
-            <Image
-              height={20}
-              width={20}
-              className="animate-bounce"
-              src="/arrow-down.svg"
-              alt="arrow"
-            />
-          </div> */}
         </div>
       </div>
-      {/* <div className="hidden pb-[300px] md:block">
-        {food.map(([emoji, hueA, hueB, header, body, link]) => (
-          <Card
-            emoji={emoji}
-            hueA={hueA}
-            hueB={hueB}
-            key={emoji}
-            header={header}
-            body={body}
-            link={link}
-          />
-        ))}
-      </div> */}
     </main>
   );
 }
