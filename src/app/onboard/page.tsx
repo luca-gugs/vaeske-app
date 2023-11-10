@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import { api } from "~/trpc/server";
 import { Header } from "../_components/organisms/Header";
-import { OnboardingForm } from "../_components/organisms/OnboardingForm";
-import { ProgressBar } from "../_components/organisms/OnboardingForm/ProgressBar";
-import { OnboardingProvider } from "../_components/organisms/OnboardingForm/context";
+import { UserOnboardingForm } from "../_components/organisms/UserOnboardingForm";
+import { ProgressBar } from "../_components/organisms/UserOnboardingForm/ProgressBar";
+import { OnboardingProvider } from "../_components/organisms/UserOnboardingForm/context";
 
 export default async function Onboard() {
   const userProfile = await api.user.getCurrent.query({});
@@ -17,7 +17,7 @@ export default async function Onboard() {
       <div className="relative flex w-full flex-grow flex-col items-center justify-center">
         <OnboardingProvider>
           <ProgressBar />
-          <OnboardingForm />
+          <UserOnboardingForm />
         </OnboardingProvider>
       </div>
     </main>

@@ -1,13 +1,19 @@
-import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs";
+import { redirect, useParams } from "next/navigation";
 import { Fragment, Suspense } from "react";
+import { ControlPanel } from "~/app/_components/organisms/ControlPanel";
 import { api } from "~/trpc/server";
-import { ControlPanel } from "../_components/organisms/ControlPanel";
 
-export default async function Documents() {
-  const userProfile = await api.user.getCurrent.query({ getProperties: true });
+export default async function OrgOnboard({}: {}) {
+  const user = await api.user.getCurrent.query({ getProperties: true });
+  const { orgSlug } = auth();
+  const org = await api.org.getBySlug.query({ slug: orgSlug || "" });
 
-  if (!userProfile?.user?.id) {
+  if (!user?.user?.id) {
     redirect("/onboard");
+  }
+  if (org.isSuccess && org.payload?.slug) {
+    redirect(`/org/${org.payload?.slug}`);
   }
 
   return (
@@ -17,14 +23,11 @@ export default async function Documents() {
         <div className="grid w-full max-w-[1384px] grid-cols-12 justify-between gap-[16px] px-[20px] py-[32px] md:gap-[24px] md:p-[48px]">
           <Suspense fallback={<p>Loading feed...</p>}>
             <div className="col-span-12">
-              <h1 className="text-6xl font-bold">Documents Root Page</h1>
-              <p>
-                A page where users can upload documents and see their statuses
-              </p>
+              <h1 className="text-6xl font-bold">Org Onboarding</h1>
             </div>
             <div className="col-span-12 space-y-2">
               <h1 className="text-xl">Properties Array</h1>
-              {userProfile?.properties?.map((property) => {
+              {user?.properties?.map((property) => {
                 return (
                   <Fragment key={property.id}>
                     <div className="space-between flex">
@@ -60,3 +63,23 @@ export default async function Documents() {
     </main>
   );
 }
+
+//   Client Side Org Hooks
+//   const {
+//     isLoaded,
+//     organization,
+//     membership,
+//     invitations,
+//     memberships,
+//     membershipRequests,
+//     domains,
+//   } = useOrganization();
+
+//   //USE ORGANIZATION
+//   console.log("isLoaded: ", isLoaded);
+//   console.log("organization: ", organization);
+//   console.log("membership: ", membership);
+//   console.log("invitations: ", invitations);
+//   console.log("memberships: ", memberships);
+//   console.log("membershipRequests: ", membershipRequests);
+//   console.log("domains: ", domains);

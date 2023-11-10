@@ -5,7 +5,11 @@ export default function CreateOrganizationPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-white">
       <Header />
-      <CreateOrganization />
+      <CreateOrganization
+        routing="path"
+        path="/create-organization"
+        afterCreateOrganizationUrl="/org/onboard"
+      />
     </main>
   );
 }

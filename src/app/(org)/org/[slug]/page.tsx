@@ -1,10 +1,24 @@
-import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs";
+import { redirect, useParams } from "next/navigation";
 import { Fragment, Suspense } from "react";
+import { ControlPanel } from "~/app/_components/organisms/ControlPanel";
 import { api } from "~/trpc/server";
-import { ControlPanel } from "../_components/organisms/ControlPanel";
 
-export default async function Documents() {
+export default async function Org({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const { slug } = params;
   const userProfile = await api.user.getCurrent.query({ getProperties: true });
+  const { orgSlug, orgRole, orgId } = auth();
+  //   const params = useParams();
+  console.log("params: ", params);
+  console.log("params: ", searchParams);
+
+  console.log("test: ", orgSlug, orgRole, orgId);
 
   if (!userProfile?.user?.id) {
     redirect("/onboard");
@@ -17,10 +31,7 @@ export default async function Documents() {
         <div className="grid w-full max-w-[1384px] grid-cols-12 justify-between gap-[16px] px-[20px] py-[32px] md:gap-[24px] md:p-[48px]">
           <Suspense fallback={<p>Loading feed...</p>}>
             <div className="col-span-12">
-              <h1 className="text-6xl font-bold">Documents Root Page</h1>
-              <p>
-                A page where users can upload documents and see their statuses
-              </p>
+              <h1 className="text-6xl font-bold">Org Dashboard</h1>
             </div>
             <div className="col-span-12 space-y-2">
               <h1 className="text-xl">Properties Array</h1>
@@ -60,3 +71,23 @@ export default async function Documents() {
     </main>
   );
 }
+
+//   Client Side Org Hooks
+//   const {
+//     isLoaded,
+//     organization,
+//     membership,
+//     invitations,
+//     memberships,
+//     membershipRequests,
+//     domains,
+//   } = useOrganization();
+
+//   //USE ORGANIZATION
+//   console.log("isLoaded: ", isLoaded);
+//   console.log("organization: ", organization);
+//   console.log("membership: ", membership);
+//   console.log("invitations: ", invitations);
+//   console.log("memberships: ", memberships);
+//   console.log("membershipRequests: ", membershipRequests);
+//   console.log("domains: ", domains);

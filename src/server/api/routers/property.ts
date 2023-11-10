@@ -6,19 +6,11 @@ import {
   privateProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { posts, users, property } from "~/server/db/schema";
+import { posts, users, propertys } from "~/server/db/schema";
 import { clerkClient } from "@clerk/nextjs/server";
-import StreetAddress from "../../../app/_components/organisms/OnboardingForm/steps/StreetAddress/index";
+import StreetAddress from "../../../app/_components/organisms/UserOnboardingForm/steps/StreetAddress/index";
 
 export const propertyRouter = createTRPCRouter({
-  //   hello: publicProcedure
-  //     .input(z.object({ text: z.string() }))
-  //     .query(({ input }) => {
-  //       return {
-  //         greeting: `Hello ${input.text}`,
-  //       };
-  //     }),
-
   create: privateProcedure
     .input(
       z.object({
@@ -37,7 +29,7 @@ export const propertyRouter = createTRPCRouter({
       // await new Promise((resolve) => setTimeout(resolve, 1000));
       const ltv = input.mb / input.ehv;
       const liens = 0;
-      const newProperty = await ctx.db.insert(property).values({
+      const newProperty = await ctx.db.insert(propertys).values({
         userId: ctx.userId,
         streetAddress: input.street,
         streetAddress2: input.street2,

@@ -6,7 +6,7 @@ import {
   privateProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { posts, users, property } from "~/server/db/schema";
+import { posts, users, propertys } from "~/server/db/schema";
 import { clerkClient } from "@clerk/nextjs/server";
 
 export const userRouter = createTRPCRouter({
@@ -67,8 +67,8 @@ export const userRouter = createTRPCRouter({
       }[] = [];
 
       if (input?.getProperties) {
-        properties = await ctx.db.query.property.findMany({
-          where: eq(property.userId, user?.id ?? "1"),
+        properties = await ctx.db.query.propertys.findMany({
+          where: eq(propertys.userId, user?.id ?? "1"),
         });
       }
 

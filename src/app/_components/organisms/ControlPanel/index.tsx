@@ -48,7 +48,11 @@ export const ControlPanel = ({}: ControlPanelProps) => {
               const isActive = item.link === pathname;
 
               return (
-                <Tooltip position="right" text={item.nameMbl}>
+                <Tooltip
+                  key={item.nameMbl}
+                  position="right"
+                  text={item.nameMbl}
+                >
                   <Link
                     id={`controlPanelLinkTo${item.nameDsk}`}
                     key={item.link}
@@ -74,8 +78,8 @@ export const ControlPanel = ({}: ControlPanelProps) => {
 
             return (
               <Link
-                id={`controlPanelLinkTo${item.nameDsk}`}
-                key={item.link}
+                key={`MobileLink-${item.nameMbl}`}
+                id={`MobileLink-${item.nameMbl}`}
                 href={item.link}
                 className={`flex min-w-[67px] flex-col items-center space-y-[4px] py-[8px] ${
                   isActive ? "text-outerSpace" : "text-darkGrey2"

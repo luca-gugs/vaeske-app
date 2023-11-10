@@ -51,7 +51,7 @@ export const users = mysqlTable(
   }),
 );
 
-export const property = mysqlTable(
+export const propertys = mysqlTable(
   "property",
   {
     // Id Fields
@@ -74,5 +74,25 @@ export const property = mysqlTable(
   },
   (table) => ({
     nameIndex: index("name_idx").on(table.userId),
+  }),
+);
+
+export const orgs = mysqlTable(
+  "org",
+  {
+    id: varchar("id", { length: 256 }).primaryKey(),
+    email: varchar("email", { length: 256 }).notNull(),
+    phone: varchar("phone", { length: 256 }).notNull(),
+    name: varchar("name", { length: 256 }).notNull(),
+    slug: varchar("slug", { length: 256 }).notNull(),
+    description: varchar("description", { length: 256 }).notNull(),
+    // TimeStamps
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt").onUpdateNow(),
+  },
+  (example) => ({
+    slugIndex: index("slug_idx").on(example.slug),
   }),
 );

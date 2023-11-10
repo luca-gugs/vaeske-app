@@ -42,7 +42,10 @@ export default function Team() {
               },
             ].map((person) => {
               return (
-                <div className="flex w-full flex-col items-center p-4 md:w-1/2 md:p-10 lg:w-1/3">
+                <div
+                  key={person.name}
+                  className="flex w-full flex-col items-center p-4 md:w-1/2 md:p-10 lg:w-1/3"
+                >
                   <Image
                     src={person.photo}
                     height={100}

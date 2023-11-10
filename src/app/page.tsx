@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
+import { Fragment, Suspense } from "react";
 import { api } from "~/trpc/server";
 import { ControlPanel } from "./_components/organisms/ControlPanel";
 
@@ -23,7 +23,7 @@ export default async function Dashboard() {
               <h1 className="text-xl">Properties Array</h1>
               {userProfile?.properties?.map((property) => {
                 return (
-                  <>
+                  <Fragment key={property.id}>
                     <div className="space-between flex">
                       <span>Addr:</span>
                       <span>
@@ -47,7 +47,7 @@ export default async function Dashboard() {
                       <span>Liens:</span>
                       <span>{property?.liens}</span>
                     </div>
-                  </>
+                  </Fragment>
                 );
               })}
             </div>
