@@ -6,9 +6,14 @@ import { api } from "~/trpc/server";
 
 export default async function Org() {
   const userProfile = await api.user.getCurrent.query({ getProperties: true });
+  const { orgSlug } = auth();
+  const org = await api.org.getBySlug.query({ slug: orgSlug || "" });
 
   if (!userProfile?.user?.id) {
     redirect("/onboard");
+  }
+  if (!org.isSuccess || !org.payload) {
+    redirect("/org/onboard");
   }
 
   return (
@@ -18,7 +23,7 @@ export default async function Org() {
         <div className="grid w-full max-w-[1384px] grid-cols-12 justify-between gap-[16px] px-[20px] py-[32px] md:gap-[24px] md:p-[48px]">
           <Suspense fallback={<p>Loading feed...</p>}>
             <div className="col-span-12">
-              <h1 className="text-6xl font-bold">Org Dashboard</h1>
+              <h1 className="text-6xl font-bold">{org.payload.name}</h1>
             </div>
             <div className="col-span-12 space-y-2">
               <h1 className="text-xl">Properties Array</h1>
