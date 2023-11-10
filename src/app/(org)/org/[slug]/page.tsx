@@ -4,21 +4,8 @@ import { Fragment, Suspense } from "react";
 import { ControlPanel } from "~/app/_components/organisms/ControlPanel";
 import { api } from "~/trpc/server";
 
-export default async function Org({
-  params,
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  const { slug } = params;
+export default async function Org() {
   const userProfile = await api.user.getCurrent.query({ getProperties: true });
-  const { orgSlug, orgRole, orgId } = auth();
-  //   const params = useParams();
-  console.log("params: ", params);
-  console.log("params: ", searchParams);
-
-  console.log("test: ", orgSlug, orgRole, orgId);
 
   if (!userProfile?.user?.id) {
     redirect("/onboard");

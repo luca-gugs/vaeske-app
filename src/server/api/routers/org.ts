@@ -33,15 +33,15 @@ export const orgRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call -- pls use to test ux
       // await new Promise((resolve) => setTimeout(resolve, 1000));
-      const user = await ctx.db.insert(orgs).values({
-        id: ctx.userId,
+      const org = await ctx.db.insert(orgs).values({
+        id: input.id,
         email: input.email,
         phone: input.phone,
         name: input.name,
         slug: input.slug,
         description: input.description,
       });
-      return user;
+      return org;
     }),
 
   getBySlug: publicProcedure

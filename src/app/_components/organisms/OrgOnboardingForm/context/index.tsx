@@ -1,8 +1,10 @@
 "use client";
+import { useOrganization, useUser } from "@clerk/nextjs";
 import { ReactNode, createContext, useContext, useState } from "react";
 import {
   Control,
   FieldErrors,
+  SubmitHandler,
   UseFormHandleSubmit,
   UseFormRegister,
   UseFormSetFocus,
@@ -10,29 +12,18 @@ import {
   UseFormWatch,
   useForm,
 } from "react-hook-form";
+import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { or } from "drizzle-orm";
+import { api } from "~/trpc/react";
 
 export type KeyState = {
-  //User Type
-  type: string; //Step 1
-  ownershipStatusCheck: boolean; //Step 1
-  creditScore: string;
-
-  //Property Values
-  street: string; //Step 3
-  street2: string; //Step 3
-  city: string; //Step 3
-  state: string; //Step 3
-  zip: string; //Step 3
-
-  //Financial Values
-  estimatedHomeValue: number; //Step 4
-  mortgageBalance: number; //Step 5
-  desiredCashout: number; //Step 6
+  description: string;
+  phone: string;
 };
 
-interface OnboardingContextType {
-  finish: boolean;
-  setFinish: (finish: boolean) => void;
+interface OrgOnboardingContextType {
+  onSubmit: SubmitHandler<KeyState>;
   step: number;
   setStep: (step: number) => void;
   register: UseFormRegister<KeyState> | null;
@@ -45,9 +36,7 @@ interface OnboardingContextType {
   handleSubmit: UseFormHandleSubmit<KeyState, undefined> | null;
 }
 
-const OnboardingContext = createContext<OnboardingContextType>({
-  finish: false,
-  setFinish: () => null,
+const OrgOnboardingContext = createContext<OrgOnboardingContextType>({
   step: 0,
   setStep: () => null,
   register: null,
@@ -57,13 +46,17 @@ const OnboardingContext = createContext<OnboardingContextType>({
   setFocus: null,
   control: null,
   handleSubmit: null,
+  onSubmit: () => null,
 });
 
-export const OnboardingProvider: React.FC<{
+export const OrgOnboardingProvider: React.FC<{
   children: ReactNode;
 }> = ({ children }) => {
   const [step, setStep] = useState(0);
-  const [finish, setFinish] = useState(false);
+  const { user } = useUser();
+  const router = useRouter();
+  const { organization } = useOrganization();
+
   const {
     control,
     register,
@@ -74,25 +67,44 @@ export const OnboardingProvider: React.FC<{
     setFocus,
   } = useForm({
     defaultValues: {
-      // User Type
-      type: "homeOwner",
-      creditScore: "good",
-      ownershipStatusCheck: true,
-      // Address Values
-      street: "",
-      street2: "",
-      city: "",
-      state: "",
-      zip: "",
-      // Financial Values
-      estimatedHomeValue: 0,
-      mortgageBalance: 0,
-      desiredCashout: 0,
+      description: "",
+      phone: "",
     },
   });
 
+  // API CALLS
+  const creatOrganization = api.org.create.useMutation({
+    onSuccess: (x, y) => {
+      console.log("CREATE USER", x, y);
+      router.refresh();
+    },
+    onError: (err) => {
+      console.error("CREATE USER ERROR: ", err);
+    },
+  });
+
+  const onSubmit: SubmitHandler<KeyState> = (data) => {
+    if (
+      organization?.id &&
+      organization?.name &&
+      organization?.slug &&
+      user?.primaryEmailAddress?.emailAddress
+    ) {
+      creatOrganization.mutate({
+        id: organization.id,
+        email: user?.primaryEmailAddress?.emailAddress,
+        phone: data.phone,
+        name: organization.name,
+        slug: organization.slug,
+        description: data.description,
+      });
+    } else {
+      console.error("ERROR!");
+    }
+  };
+
   return (
-    <OnboardingContext.Provider
+    <OrgOnboardingContext.Provider
       value={{
         control,
         handleSubmit,
@@ -103,13 +115,12 @@ export const OnboardingProvider: React.FC<{
         setValue,
         watch,
         setFocus,
-        finish,
-        setFinish,
+        onSubmit,
       }}
     >
       {children}
-    </OnboardingContext.Provider>
+    </OrgOnboardingContext.Provider>
   );
 };
 
-export const useOnboardingContext = () => useContext(OnboardingContext);
+export const useOrgOnboardingContext = () => useContext(OrgOnboardingContext);

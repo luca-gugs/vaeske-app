@@ -2,6 +2,9 @@ import { auth } from "@clerk/nextjs";
 import { redirect, useParams } from "next/navigation";
 import { Fragment, Suspense } from "react";
 import { ControlPanel } from "~/app/_components/organisms/ControlPanel";
+import { OrgOnboardingForm } from "~/app/_components/organisms/OrgOnboardingForm";
+import { ProgressBar } from "~/app/_components/organisms/OrgOnboardingForm/ProgressBar";
+import { OrgOnboardingProvider } from "~/app/_components/organisms/OrgOnboardingForm/context";
 import { api } from "~/trpc/server";
 
 export default async function OrgOnboard({}: {}) {
@@ -21,43 +24,13 @@ export default async function OrgOnboard({}: {}) {
       <ControlPanel />
       <div className="flex h-fit min-h-screen grow flex-col items-center md:ml-[105px]">
         <div className="grid w-full max-w-[1384px] grid-cols-12 justify-between gap-[16px] px-[20px] py-[32px] md:gap-[24px] md:p-[48px]">
-          <Suspense fallback={<p>Loading feed...</p>}>
-            <div className="col-span-12">
-              <h1 className="text-6xl font-bold">Org Onboarding</h1>
-            </div>
-            <div className="col-span-12 space-y-2">
-              <h1 className="text-xl">Properties Array</h1>
-              {user?.properties?.map((property) => {
-                return (
-                  <Fragment key={property.id}>
-                    <div className="space-between flex">
-                      <span>Addr:</span>
-                      <span>
-                        {property?.streetAddress}, {property?.city},{" "}
-                        {property?.state}, {property?.zip}
-                      </span>
-                    </div>
-                    <div className="space-between flex">
-                      <span>EHV:</span>
-                      <span>{property?.ehv}</span>
-                    </div>
-                    <div className="space-between flex">
-                      <span>MB:</span>
-                      <span>{property?.mb}</span>
-                    </div>
-                    <div className="space-between flex">
-                      <span>LTV:</span>
-                      <span>{property?.ltv}</span>
-                    </div>
-                    <div className="space-between flex">
-                      <span>Liens:</span>
-                      <span>{property?.liens}</span>
-                    </div>
-                  </Fragment>
-                );
-              })}
-            </div>
-          </Suspense>
+          <div className="col-span-12 mt-[80px] flex h-full flex-grow justify-center">
+            <Suspense fallback={<p>Loading feed...</p>}>
+              <OrgOnboardingProvider>
+                <OrgOnboardingForm />
+              </OrgOnboardingProvider>
+            </Suspense>
+          </div>
         </div>
       </div>
     </main>
