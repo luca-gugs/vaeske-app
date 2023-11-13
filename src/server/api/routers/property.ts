@@ -41,7 +41,6 @@ export const propertyRouter = createTRPCRouter({
         ltv: ltv,
         liens: liens,
       });
-      console.log("NEW PROPERTY: ", newProperty);
       return newProperty;
     }),
 
@@ -49,7 +48,6 @@ export const propertyRouter = createTRPCRouter({
   //     const [user] = await clerkClient.users.getUserList({
   //       userId: [ctx?.userId ?? ""],
   //     });
-  //     console.log("USER: ", user);
   //     return ctx.db.query.users.findFirst({
   //       where: eq(users.id, "1"),
   //     });

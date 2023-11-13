@@ -1,9 +1,8 @@
 import { auth } from "@clerk/nextjs";
-import { redirect, useParams } from "next/navigation";
-import { Fragment, Suspense } from "react";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { ControlPanel } from "~/app/_components/organisms/ControlPanel";
 import { OrgOnboardingForm } from "~/app/_components/organisms/OrgOnboardingForm";
-import { ProgressBar } from "~/app/_components/organisms/OrgOnboardingForm/ProgressBar";
 import { OrgOnboardingProvider } from "~/app/_components/organisms/OrgOnboardingForm/context";
 import { api } from "~/trpc/server";
 
@@ -15,8 +14,8 @@ export default async function OrgOnboard({}: {}) {
   if (!user?.payload?.user?.id) {
     redirect("/onboard");
   }
-  if (org.isSuccess && org.payload?.slug) {
-    redirect(`/org/${org.payload?.slug}`);
+  if (org.isSuccess && org.payload?.org.slug) {
+    redirect(`/org/${org.payload?.org?.slug}`);
   }
 
   return (
@@ -36,23 +35,3 @@ export default async function OrgOnboard({}: {}) {
     </main>
   );
 }
-
-//   Client Side Org Hooks
-//   const {
-//     isLoaded,
-//     organization,
-//     membership,
-//     invitations,
-//     memberships,
-//     membershipRequests,
-//     domains,
-//   } = useOrganization();
-
-//   //USE ORGANIZATION
-//   console.log("isLoaded: ", isLoaded);
-//   console.log("organization: ", organization);
-//   console.log("membership: ", membership);
-//   console.log("invitations: ", invitations);
-//   console.log("memberships: ", memberships);
-//   console.log("membershipRequests: ", membershipRequests);
-//   console.log("domains: ", domains);

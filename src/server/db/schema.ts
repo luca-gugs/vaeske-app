@@ -98,3 +98,20 @@ export const orgs = mysqlTable(
     slugIndex: index("slug_idx").on(example.slug),
   }),
 );
+
+export const buyboxes = mysqlTable(
+  "buybox",
+  {
+    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+    orgId: varchar("orgId", { length: 256 }).notNull(),
+
+    // TimeStamps
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt").onUpdateNow(),
+  },
+  (example) => ({
+    orgIdIndex: index("orgId_idx").on(example.orgId),
+  }),
+);

@@ -13,8 +13,6 @@ export const UserType = () => {
     }
   }, [setFocus]);
 
-  // const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
-
   const isDisabled = !watch || watch("type") === "" ? true : false;
   if (register && watch) {
     return (

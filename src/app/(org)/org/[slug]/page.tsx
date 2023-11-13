@@ -9,7 +9,11 @@ import { api } from "~/trpc/server";
 export default async function Org({ params }: any) {
   const userProfile = await api.user.getCurrent.query({ getProperties: true });
   const { orgSlug } = auth();
-  const org = await api.org.getBySlug.query({ slug: params.slug || "" });
+  const org = await api.org.getBySlug.query({
+    slug: params.slug || "",
+  });
+
+  console.log("ORG: ", org);
 
   if (!userProfile?.payload?.user?.id) {
     redirect("/onboard");
@@ -26,7 +30,7 @@ export default async function Org({ params }: any) {
           <Suspense fallback={<p>Loading feed...</p>}>
             <div className="col-span-12">
               <h1 className="text-6xl font-bold capitalize">
-                {org.payload.name}
+                {org.payload.org.name}
               </h1>
             </div>
             <div className="col-span-12"></div>
@@ -78,23 +82,3 @@ export default async function Org({ params }: any) {
     </main>
   );
 }
-
-//   Client Side Org Hooks
-//   const {
-//     isLoaded,
-//     organization,
-//     membership,
-//     invitations,
-//     memberships,
-//     membershipRequests,
-//     domains,
-//   } = useOrganization();
-
-//   //USE ORGANIZATION
-//   console.log("isLoaded: ", isLoaded);
-//   console.log("organization: ", organization);
-//   console.log("membership: ", membership);
-//   console.log("invitations: ", invitations);
-//   console.log("memberships: ", memberships);
-//   console.log("membershipRequests: ", membershipRequests);
-//   console.log("domains: ", domains);

@@ -25,23 +25,3 @@ export default function Org({ params }: any) {
     </main>
   );
 }
-
-//   Client Side Org Hooks
-//   const {
-//     isLoaded,
-//     organization,
-//     membership,
-//     invitations,
-//     memberships,
-//     membershipRequests,
-//     domains,
-//   } = useOrganization();
-
-//   //USE ORGANIZATION
-//   console.log("isLoaded: ", isLoaded);
-//   console.log("organization: ", organization);
-//   console.log("membership: ", membership);
-//   console.log("invitations: ", invitations);
-//   console.log("memberships: ", memberships);
-//   console.log("membershipRequests: ", membershipRequests);
-//   console.log("domains: ", domains);

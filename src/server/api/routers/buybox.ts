@@ -9,7 +9,7 @@ import {
 } from "~/server/api/trpc";
 import { orgs, buyboxes } from "~/server/db/schema";
 
-export const orgRouter = createTRPCRouter({
+export const buyBoxrouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
     .query(({ input }) => {
@@ -21,51 +21,45 @@ export const orgRouter = createTRPCRouter({
   create: privateProcedure
     .input(
       z.object({
-        id: z.string().min(1),
-        email: z.string().min(1),
-        phone: z.string().min(1),
-        name: z.string().min(1),
-        slug: z.string().min(1),
-        description: z.string().min(1),
+        orgId: z.string().min(1),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call -- pls use to test ux
       // await new Promise((resolve) => setTimeout(resolve, 1000));
-      const org = await ctx.db.insert(orgs).values({
-        id: input.id,
-        email: input.email,
-        phone: input.phone,
-        name: input.name,
-        slug: input.slug,
-        description: input.description,
-      });
-      return org;
+      try {
+        const org = await ctx.db.insert(buyboxes).values({
+          orgId: input.orgId,
+        });
+        return {
+          payload: org,
+          isSuccess: true,
+        };
+      } catch (error) {
+        return {
+          isSuccess: false,
+          errorCode: "network_error",
+        };
+      }
     }),
 
-  getBySlug: publicProcedure
+  getByOrg: publicProcedure
     .input(
       z.object({
-        slug: z.string().min(1),
-        getBuyBoxes: z.boolean().optional(),
+        orgId: z.string().min(1),
       }),
     )
     .query(async ({ ctx, input }) => {
       try {
-        const org = await ctx.db.query.orgs.findFirst({
-          where: eq(orgs.slug, input.slug),
+        const _buyboxes = await ctx.db.query.buyboxes.findMany({
+          where: eq(buyboxes.orgId, input.orgId),
         });
-        let _buyboxes: any[] = [];
-        if (!org) {
+        console.log("buyboxes: ", _buyboxes);
+        if (!_buyboxes) {
           throw new TRPCError({ code: "NOT_FOUND", message: "Org not found" });
         }
-        if (input.getBuyBoxes) {
-          _buyboxes = await ctx.db.query.buyboxes.findMany({
-            where: eq(buyboxes.orgId, org.id),
-          });
-        }
         return {
-          payload: { org, buyboxes: _buyboxes },
+          payload: _buyboxes,
           isSuccess: true,
         };
       } catch (error) {
