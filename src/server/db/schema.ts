@@ -38,6 +38,8 @@ export const users = mysqlTable(
   "user",
   {
     id: varchar("id", { length: 256 }).primaryKey(),
+    first: varchar("first", { length: 256 }).notNull(),
+    last: varchar("last", { length: 256 }).notNull(),
     email: varchar("email", { length: 256 }).notNull(),
     creditScore: varchar("creditScore", { length: 256 }),
     type: varchar("type", { length: 256 }).notNull(),

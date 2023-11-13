@@ -4,6 +4,7 @@ import Link from "next/link";
 import { redirect, useParams } from "next/navigation";
 import { Fragment, Suspense } from "react";
 import { ControlPanel } from "~/app/_components/organisms/ControlPanel";
+import Table from "~/app/_components/organisms/Table/v1";
 import { api } from "~/trpc/server";
 
 export default async function Org({ params }: any) {
@@ -23,7 +24,10 @@ export default async function Org({ params }: any) {
       <ControlPanel />
       <div className="flex h-fit min-h-screen grow flex-col items-center md:ml-[105px]">
         <div className="grid w-full max-w-[1384px] grid-cols-12 justify-between gap-[16px] px-[20px] py-[32px] md:gap-[24px] md:p-[48px]">
-          <Suspense fallback={<p>Loading feed...</p>}>
+          <div className="relative col-span-12">
+            <Table />
+          </div>
+          {/* <Suspense fallback={<p>Loading feed...</p>}>
             <div className="col-span-12">
               <h1 className="text-6xl font-bold capitalize">
                 {org.payload.name}
@@ -72,7 +76,7 @@ export default async function Org({ params }: any) {
                 src="/biz3.svg"
               />
             </Link>
-          </Suspense>
+          </Suspense> */}
         </div>
       </div>
     </main>

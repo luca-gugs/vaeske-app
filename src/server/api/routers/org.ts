@@ -52,6 +52,7 @@ export const orgRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       try {
+        console.log("input", input);
         const org = await ctx.db.query.orgs.findFirst({
           where: eq(orgs.slug, input.slug),
         });
@@ -63,7 +64,6 @@ export const orgRouter = createTRPCRouter({
           isSuccess: true,
         };
       } catch (error) {
-        console.log("E: ", error);
         return {
           isSuccess: false,
           errorCode: "network_error",

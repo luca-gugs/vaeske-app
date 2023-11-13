@@ -8,6 +8,7 @@ import {
 } from "~/server/api/trpc";
 import { posts, users, propertys } from "~/server/db/schema";
 import { clerkClient } from "@clerk/nextjs/server";
+import { TRPCError } from "@trpc/server";
 
 export const userRouter = createTRPCRouter({
   hello: publicProcedure
@@ -22,6 +23,8 @@ export const userRouter = createTRPCRouter({
     .input(
       z.object({
         email: z.string().min(1),
+        first: z.string().min(1),
+        last: z.string().min(1),
         type: z.string().min(1),
         creditScore: z.string().min(1),
       }),
@@ -32,6 +35,8 @@ export const userRouter = createTRPCRouter({
       const user = await ctx.db.insert(users).values({
         id: ctx.userId,
         email: input.email,
+        first: input.first,
+        last: input.last,
         type: input.type,
         creditScore: input.creditScore,
       });
@@ -45,36 +50,47 @@ export const userRouter = createTRPCRouter({
         .nullable(),
     )
     .query(async ({ ctx, input }) => {
-      const [user] = await clerkClient.users.getUserList({
-        userId: [ctx?.userId ?? ""],
-      });
-      const _user = await ctx.db.query.users.findFirst({
-        where: eq(users.id, user?.id ?? "1"),
-      });
-      let properties: {
-        userId: string;
-        id: number;
-        streetAddress: string;
-        streetAddress2: string | null;
-        city: string;
-        state: string;
-        zip: string;
-        country: string | null;
-        ehv: number | null;
-        mb: number | null;
-        ltv: number | null;
-        liens: number | null;
-      }[] = [];
-
-      if (input?.getProperties) {
-        properties = await ctx.db.query.propertys.findMany({
-          where: eq(propertys.userId, user?.id ?? "1"),
+      try {
+        const [user] = await clerkClient.users.getUserList({
+          userId: [ctx?.userId ?? ""],
         });
-      }
+        const _user = await ctx.db.query.users.findFirst({
+          where: eq(users.id, user?.id ?? "1"),
+        });
 
-      return {
-        user: _user,
-        properties: properties,
-      };
+        if (!_user) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
+        }
+        let properties: {
+          userId: string;
+          id: number;
+          streetAddress: string;
+          streetAddress2: string | null;
+          city: string;
+          state: string;
+          zip: string;
+          country: string | null;
+          ehv: number | null;
+          mb: number | null;
+          ltv: number | null;
+          liens: number | null;
+        }[] = [];
+
+        if (input?.getProperties) {
+          properties = await ctx.db.query.propertys.findMany({
+            where: eq(propertys.userId, user?.id ?? "1"),
+          });
+        }
+
+        return {
+          payload: { user: _user, properties: properties },
+          isSuccess: true,
+        };
+      } catch (error) {
+        return {
+          isSuccess: false,
+          errorCode: "network_error",
+        };
+      }
     }),
 });

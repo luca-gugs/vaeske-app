@@ -12,10 +12,12 @@ import {
 } from "react-hook-form";
 
 export type KeyState = {
-  //User Type
+  //User Values
   type: string; //Step 1
   ownershipStatusCheck: boolean; //Step 1
   creditScore: string;
+  first: string;
+  last: string;
 
   //Property Values
   street: string; //Step 3
@@ -74,10 +76,12 @@ export const OnboardingProvider: React.FC<{
     setFocus,
   } = useForm({
     defaultValues: {
-      // User Type
+      // User Values
       type: "homeOwner",
       creditScore: "good",
       ownershipStatusCheck: true,
+      first: "",
+      last: "",
       // Address Values
       street: "",
       street2: "",

@@ -97,6 +97,8 @@ export const DesiredCash = () => {
       email: user?.primaryEmailAddress?.emailAddress ?? "",
       type: data.type,
       creditScore: data.creditScore,
+      first: data.first,
+      last: data.last,
     });
 
     createProperty.mutate({
@@ -159,7 +161,7 @@ export const DesiredCash = () => {
             <div className="h-[10px] w-[80%] rounded-full bg-slate-200 md:w-[450px]">
               <div
                 style={{ width: `${loading}%` }}
-                className="duration-800 h-[10px] rounded-full bg-violet-500 transition-all"
+                className="h-[10px] rounded-full bg-violet-500 transition-all duration-700"
               />
             </div>
           </div>

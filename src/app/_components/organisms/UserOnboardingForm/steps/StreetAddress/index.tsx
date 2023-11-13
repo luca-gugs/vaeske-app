@@ -1,6 +1,7 @@
 import { use, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useOnboardingContext } from "../../context";
+import { Form } from "../../components/Form";
 
 type Inputs = {
   streetAddress: string;
@@ -69,8 +70,7 @@ export default function StreetAddress() {
     return (
       /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
       <>
-        <form
-          className="shadow-dream relative grid w-[80%] grid-cols-12 gap-[10px] rounded-[10px] border-[2px] border-black p-12 md:w-[600px]"
+        <Form
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             setStep(step + 1);
@@ -213,7 +213,7 @@ export default function StreetAddress() {
               {manageFullAddr ? "use autocomplete" : "input manually"}
             </button>
           </div>
-        </form>
+        </Form>
       </>
     );
   }

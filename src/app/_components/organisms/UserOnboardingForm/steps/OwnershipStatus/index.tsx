@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useOnboardingContext } from "../../context";
+import { Form } from "../../components/Form";
 
 export const UserType = () => {
   //Not Currently In Use
@@ -18,9 +19,8 @@ export const UserType = () => {
   if (register && watch) {
     return (
       <>
-        <form
-          className="shadow-dream relative grid w-[80%] grid-cols-12 gap-[10px] rounded-[10px] border-[2px] border-black p-12 md:w-[600px]"
-          onSubmit={(e) => {
+        <Form
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             setStep(step + 1);
           }}
@@ -66,7 +66,7 @@ export const UserType = () => {
               Next
             </button>
           </div>
-        </form>
+        </Form>
       </>
     );
   }

@@ -2,13 +2,13 @@ import { redirect } from "next/navigation";
 import { api } from "~/trpc/server";
 import { Header } from "../_components/organisms/Header";
 import { UserOnboardingForm } from "../_components/organisms/UserOnboardingForm";
-import { ProgressBar } from "../_components/organisms/UserOnboardingForm/ProgressBar";
+import { ProgressBar } from "../_components/organisms/UserOnboardingForm/components/ProgressBar";
 import { OnboardingProvider } from "../_components/organisms/UserOnboardingForm/context";
 
 export default async function Onboard() {
   const userProfile = await api.user.getCurrent.query({});
 
-  if (userProfile?.user?.id) {
+  if (userProfile?.payload?.user?.id) {
     redirect("/");
   }
   return (

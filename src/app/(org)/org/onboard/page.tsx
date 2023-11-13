@@ -12,7 +12,7 @@ export default async function OrgOnboard({}: {}) {
   const { orgSlug } = auth();
   const org = await api.org.getBySlug.query({ slug: orgSlug || "" });
 
-  if (!user?.user?.id) {
+  if (!user?.payload?.user?.id) {
     redirect("/onboard");
   }
   if (org.isSuccess && org.payload?.slug) {

@@ -6,7 +6,7 @@ import { ControlPanel } from "../_components/organisms/ControlPanel";
 export default async function Account() {
   const userProfile = await api.user.getCurrent.query({ getProperties: true });
 
-  if (!userProfile?.user?.id) {
+  if (!userProfile?.payload?.user?.id) {
     redirect("/onboard");
   }
 
@@ -22,7 +22,7 @@ export default async function Account() {
             </div>
             <div className="col-span-12 space-y-2">
               <h1 className="text-xl">Properties Array</h1>
-              {userProfile?.properties?.map((property) => {
+              {/* {userProfile?.properties?.map((property) => {
                 return (
                   <Fragment key={property.id}>
                     <div className="space-between flex">
@@ -50,7 +50,7 @@ export default async function Account() {
                     </div>
                   </Fragment>
                 );
-              })}
+              })} */}
             </div>
           </Suspense>
         </div>

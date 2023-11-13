@@ -1,8 +1,8 @@
 "use client";
-import { SignedIn, UserButton } from "@clerk/nextjs";
+import { SignedIn, UserButton, useOrganizationList } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import Tooltip from "../../atoms/Tooltip";
 
 type ControlPanelProps = {
@@ -13,8 +13,18 @@ type ControlPanelProps = {
 
 export const ControlPanel = ({}: ControlPanelProps) => {
   const pathname = usePathname();
+  const params = useParams();
+  const { isLoaded, setActive, userMemberships } = useOrganizationList({
+    userMemberships: {
+      infinite: true,
+    },
+  });
 
-  const items = [
+  // if (userMemberships.data && userMemberships?.data?.length > 0) {
+  //   userMemberships.data[0]?.organization.slug;
+  //   router.push(`/org/${userMemberships.data[0]?.organization.slug}`);
+  // }
+  let items = [
     {
       link: "/checklist",
       nameMbl: "Checklist",
@@ -32,6 +42,31 @@ export const ControlPanel = ({}: ControlPanelProps) => {
       src: "/user.svg",
     },
   ];
+
+  if (pathname.includes("org") && userMemberships?.data) {
+    items = [
+      {
+        link: "/organization-profile",
+        nameMbl: "Org Profile",
+        src: "/orgprofile.svg",
+      },
+      {
+        link: `/org/${userMemberships?.data[0]?.organization.slug}/buybox`,
+        nameMbl: "Buy Boxes",
+        src: "/table.svg",
+      },
+      {
+        link: "/org/matches",
+        nameMbl: "Matches",
+        src: "/heart.svg",
+      },
+      {
+        link: "/org/offers",
+        nameMbl: "Offers",
+        src: "/cash.svg",
+      },
+    ];
+  }
 
   return (
     <>

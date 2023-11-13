@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
-import { useOnboardingContext } from "../context";
+import { useOnboardingContext } from "../../context";
 
 export const ProgressBar = () => {
   const { step, finish } = useOnboardingContext();
-  const totalSteps = finish ? 5 : 6;
+  const totalSteps = finish ? 6 : 7;
   const percent = Number((step / totalSteps) * 100).toFixed(0);
   // refire deploy
   return (

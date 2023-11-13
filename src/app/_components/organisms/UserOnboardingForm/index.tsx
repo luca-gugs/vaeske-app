@@ -6,24 +6,26 @@ import { UserType } from "./steps/UserType";
 import { EstimatedHomeValue } from "./steps/EHV";
 import { MortgageBalance } from "./steps/MortgageBalance";
 import { DesiredCash } from "./steps/DesiredCash";
-import { Submit } from "./submit";
 import { CreditScore } from "./steps/CreditScore";
+import Name from "./steps/Name";
 
 //TODO Create Credit Score Step
 export const UserOnboardingForm = () => {
   const { step } = useOnboardingContext();
   switch (step) {
     case 0:
-      return <UserType />;
+      return <Name />;
     case 1:
-      return <CreditScore />;
+      return <UserType />;
     case 2:
-      return <StreetAddress />;
+      return <CreditScore />;
     case 3:
-      return <EstimatedHomeValue />;
+      return <StreetAddress />;
     case 4:
-      return <MortgageBalance />;
+      return <EstimatedHomeValue />;
     case 5:
+      return <MortgageBalance />;
+    case 6:
       return <DesiredCash />;
     // case 5:
     //   return <Submit />;
