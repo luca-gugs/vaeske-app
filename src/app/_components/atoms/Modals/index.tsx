@@ -3,14 +3,19 @@
 import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { api } from "~/trpc/react";
+import { useRouter } from "next/navigation";
 
 type ModalProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
   submit?: () => void;
+  orgId: string;
 };
 
-export default function Modal({ open, setOpen, submit }: ModalProps) {
+export default function Modal({ open, orgId, setOpen, submit }: ModalProps) {
+  const router = useRouter();
+
   const cancelButtonRef = useRef(null);
   type Inputs = {
     name: string;
@@ -22,9 +27,18 @@ export default function Modal({ open, setOpen, submit }: ModalProps) {
     watch,
     formState: { errors },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
-  console.log(watch("name")); // watch input value by passing the name of it
+  const createBuyBox = api.buybox.create.useMutation({
+    onSuccess: () => {
+      router.refresh();
+      setOpen(false);
+    },
+  });
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log("data", data.name);
+    createBuyBox.mutate({ orgId: orgId, name: data.name });
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>

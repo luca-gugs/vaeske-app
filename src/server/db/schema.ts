@@ -104,7 +104,7 @@ export const buyboxes = mysqlTable(
   {
     id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
     orgId: varchar("orgId", { length: 256 }).notNull(),
-
+    name: varchar("name", { length: 256 }).notNull(),
     // TimeStamps
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
@@ -113,5 +113,25 @@ export const buyboxes = mysqlTable(
   },
   (example) => ({
     orgIdIndex: index("orgId_idx").on(example.orgId),
+  }),
+);
+
+export const rules = mysqlTable(
+  "rule",
+  {
+    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+    buyBoxId: bigint("buyBoxId", { mode: "number" }).notNull(),
+    key: varchar("key", { length: 256 }).notNull(),
+    params: varchar("params", { length: 256 }).notNull(),
+    value: varchar("value", { length: 256 }).notNull(),
+    valueType: varchar("valueType", { length: 256 }).notNull(),
+    // TimeStamps
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt").onUpdateNow(),
+  },
+  (example) => ({
+    buyBoxIdIndex: index("buyBoxId_idx").on(example.buyBoxId),
   }),
 );

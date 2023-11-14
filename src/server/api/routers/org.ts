@@ -7,7 +7,7 @@ import {
   privateProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { orgs, buyboxes } from "~/server/db/schema";
+import { orgs, buyboxes, rules } from "~/server/db/schema";
 
 export const orgRouter = createTRPCRouter({
   hello: publicProcedure
@@ -55,14 +55,70 @@ export const orgRouter = createTRPCRouter({
         const org = await ctx.db.query.orgs.findFirst({
           where: eq(orgs.slug, input.slug),
         });
-        let _buyboxes: any[] = [];
+        let _buyboxes: {
+          orgId: string;
+          id: number;
+          name: string;
+          createdAt: Date;
+          updatedAt: Date | null;
+          rules?: {
+            id: number;
+            createdAt: Date;
+            updatedAt: Date | null;
+            buyBoxId: number;
+            key: string;
+            params: string;
+            value: string;
+            valueType: string;
+          }[];
+        }[] = [];
         if (!org) {
           throw new TRPCError({ code: "NOT_FOUND", message: "Org not found" });
         }
+
+        // If We Need To Get BuyBoxes
         if (input.getBuyBoxes) {
           _buyboxes = await ctx.db.query.buyboxes.findMany({
             where: eq(buyboxes.orgId, org.id),
           });
+          console.log("HERE: ", _buyboxes);
+
+          for (let i = 0; i < _buyboxes.length; i++) {
+            const _rules = await ctx.db.query.rules.findMany({
+              where: eq(rules.buyBoxId, (_buyboxes[i] as any).id),
+            });
+            if (_rules.length > 0) {
+              (_buyboxes[i] as any).rules = _rules;
+            }
+          }
+          console.log("THERE: ", _buyboxes);
+
+          // let rulesList: {
+          //   id: number;
+          //   createdAt: Date;
+          //   updatedAt: Date | null;
+          //   buyBoxId: number;
+          //   key: string;
+          //   params: string;
+          //   value: string;
+          //   valueType: string;
+          // }[] = [];
+          // If Buyboxes Get Rules
+          // if (_buyboxes.length > 0) {
+          //   async _buyboxes.map(async (buybox, idx) => {
+          //     console.log("bbId", buybox.id);
+          //     const _rules = await ctx.db.query.rules.findMany({
+          //       where: eq(rules.buyBoxId, buybox.id),
+          //     });
+          //     console.log("_rules: ", _rules);
+          //     if (_rules.length > 0) {
+          //       // (_buyboxes[idx] as any).rules = _rules;
+          //       rulesList = _rules;
+          //     }
+          //   });
+
+          //   console.log("TEST __ TEST", rulesList);
+          // }
         }
         return {
           payload: { org, buyboxes: _buyboxes },

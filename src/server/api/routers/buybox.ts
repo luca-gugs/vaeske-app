@@ -22,6 +22,7 @@ export const buyBoxrouter = createTRPCRouter({
     .input(
       z.object({
         orgId: z.string().min(1),
+        name: z.string().min(1),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -30,6 +31,7 @@ export const buyBoxrouter = createTRPCRouter({
       try {
         const org = await ctx.db.insert(buyboxes).values({
           orgId: input.orgId,
+          name: input.name,
         });
         return {
           payload: org,

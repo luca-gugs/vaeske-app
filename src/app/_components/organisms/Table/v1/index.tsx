@@ -1,56 +1,125 @@
 // Table.tsx
 "use client";
-import React, { Fragment, useState } from "react";
+import React, {
+  ChangeEventHandler,
+  Fragment,
+  useEffect,
+  useState,
+} from "react";
 import { Button } from "../../../atoms/Button";
 import { stateCodes } from "~/app/_utils";
 import NumberInput from "~/app/_components/atoms/NumberInput";
 import Modal from "~/app/_components/atoms/Modals";
-const Table: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("Sheet1"); // Initial active tab
+import { Select } from "~/app/_components/atoms/Select";
+
+type TableProps = {
+  orgId: string;
+  buyboxes: {
+    orgId: string;
+    id: number;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date | null;
+    rules?: {
+      id: number;
+      createdAt: Date;
+      updatedAt: Date | null;
+      buyBoxId: number;
+      key: string;
+      params: string;
+      value: string;
+      valueType: string;
+    }[];
+  }[];
+};
+const Table = ({ orgId, buyboxes }: TableProps) => {
+  console.log("BUYBOXES: ", buyboxes);
+
+  const [activeTab, setActiveTab] = useState(buyboxes[0]?.name || null); // Initial active tab
   const [newBuyBoxModalOpen, setNewBuyBoxModalOpen] = useState(false);
 
-  const [sheet, setSheet] = useState([
-    { key: "ehv", rule: "greater than", value: "0" },
-  ]);
+  const [sheet, setSheet] = useState<any[]>([]);
 
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName);
   };
 
-  const options = {
+  useEffect(() => {
+    if (activeTab) {
+      const activeBuyBox = buyboxes.find((buybox) => buybox.name === activeTab);
+      if (activeBuyBox?.rules && activeBuyBox?.rules.length > 0) {
+        setSheet(activeBuyBox?.rules);
+      }
+    }
+  }, [activeTab]);
+
+  const primaryOptionsObject = {
     ehv: {
+      id: "ehv",
       name: "Estimated Home Value",
-      options: ["Greater Than", "Less Than"],
+      options: ["greaterThan", "lessThan"],
     },
-    mb: { name: "Mortgage Balance", options: ["Greater Than", "Less Than"] },
-    cs: { name: "Credit Score", options: ["minimum"] },
-    disallowedStates: { name: "Disallowed States", options: stateCodes },
-    disallowedZips: { name: "Disallowed Zips", options: [] },
+    mb: {
+      id: "mb",
+      name: "Mortgage Balance",
+      options: ["greaterThan", "lessThan"],
+    },
+    cs: {
+      id: "cs",
+      name: "Credit Score",
+      options: ["greaterThan", "lessThan"],
+    },
+    disallowedStates: {
+      id: "disallowedStates",
+      name: "Disallowed States",
+      options: [],
+    },
+    disallowedZips: {
+      id: "disallowedZips",
+      name: "Disallowed Zips",
+      options: [],
+    },
+  };
+  const primaryOptionsArray = [
+    "ehv",
+    "mb",
+    "cs",
+    "disallowedStates",
+    "disallowedZips",
+  ];
+
+  const secondaryOptionsObject = {
+    greaterThan: {
+      id: "greaterThan",
+      name: "Greater Than",
+    },
+    lessThan: {
+      id: "lessThan",
+      name: "Less Than",
+    },
   };
 
-  const optionArray = ["ehv", "mb", "cs", "disallowedStates", "disallowedZips"];
   return (
     <>
       <div className="col-span-12 flex justify-between">
         {/* Buy Box Tabs */}
-        {/* <div className="mb-4 flex">
-          <div
-            className={`cursor-pointer border-b-2 px-4 py-2 ${
-              activeTab === "Sheet1" ? "border-blue-500" : ""
-            }`}
-            onClick={() => handleTabClick("Sheet1")}
-          >
-            Sheet 1
+        {buyboxes.length > 0 && (
+          <div className="mb-4 flex">
+            {buyboxes.map((buybox, idx) => {
+              return (
+                <div
+                  key={idx}
+                  className={`cursor-pointer border-b-2 px-4 py-2 ${
+                    activeTab === buybox.name ? "border-blue-500" : ""
+                  }`}
+                  onClick={() => handleTabClick(buybox.name)}
+                >
+                  {buybox.name}
+                </div>
+              );
+            })}
           </div>
-          <div
-            className={`cursor-pointer border-b-2 px-4 py-2 ${
-              activeTab === "Sheet2" ? "border-blue-500" : ""
-            }`}
-            onClick={() => handleTabClick("Sheet2")}
-          >
-            Sheet 2
-          </div>
-        </div> */}
+        )}
 
         <Button
           className="hover:shadow-xl hover:transition-all"
@@ -61,15 +130,18 @@ const Table: React.FC = () => {
       </div>
 
       {/* Rules Table */}
-      {/* <div className="col-span-12 grid w-full grid-cols-12">
-        <div className="col-span-8 border px-4 py-2 font-bold">Rule</div>
-        <div className="col-span-4 border px-4 py-2 font-bold">Value</div>
-        {sheet.map((_, index) => {
+      <div className="col-span-12 grid w-full grid-cols-12">
+        <div className="col-span-12 border px-4 py-2 font-bold">Rules</div>
+        {sheet.map((currentRule, index) => {
           let sheetCopy = sheet;
           let currentRow = sheetCopy[index];
 
+          console.log("currentRow", currentRow);
+
           const secondaryOptions =
-            options[currentRow?.key as keyof typeof options].options;
+            primaryOptionsObject[
+              currentRow?.key as keyof typeof primaryOptionsObject
+            ].options;
 
           const setNumberInput = (value: string) => {
             if (currentRow && currentRow !== undefined) {
@@ -80,58 +152,88 @@ const Table: React.FC = () => {
               setSheet(newSheet as any);
             }
           };
+
+          const handleKeyValueChange = (
+            event: React.ChangeEvent<HTMLSelectElement>,
+          ) => {
+            currentRow.key = event;
+            const newSheet = sheetCopy.map((u, idx) =>
+              idx !== index ? u : currentRow,
+            );
+            setSheet(newSheet as any);
+          };
+
+          const handleParamValueChange = (
+            event: React.ChangeEvent<HTMLSelectElement>,
+          ) => {
+            currentRow.params = event;
+            const newSheet = sheetCopy.map((u, idx) =>
+              idx !== index ? u : currentRow,
+            );
+            setSheet(newSheet as any);
+          };
+
           return (
-            <Fragment key={index}>
-              <div className="col-span-8 border px-4 py-2">
-                <select>
-                  {optionArray.map((option) => {
-                    return (
-                      <option value={option}>
-                        {options[option as keyof typeof options]?.name}
-                      </option>
-                    );
-                  })}
-                </select>
-                <span className="mx-2">is</span>
-                {secondaryOptions.length > 0 && (
-                  <select>
-                    {secondaryOptions.map((option) => {
-                      return <option value={option}>{option}</option>;
-                    })}
-                  </select>
-                )}
-              </div>
-              <div className="col-span-4 border px-4 py-2">
-                <NumberInput
-                  value={sheet[index]?.value || ""}
-                  onChange={setNumberInput}
-                  id={""}
+            <div
+              key={index}
+              className="md:flex-col-row col-span-12 flex flex-col flex-wrap space-x-0 space-y-2 border px-4 py-2 md:items-center md:space-x-2 md:space-y-0"
+            >
+              <Select
+                selected={
+                  primaryOptionsObject[
+                    currentRow.key as keyof typeof primaryOptionsObject
+                  ]
+                }
+                setSelected={handleKeyValueChange}
+                options={primaryOptionsArray}
+              />
+              <span className="">is</span>
+              {secondaryOptions.length > 0 && (
+                <Select
+                  selected={
+                    secondaryOptionsObject[
+                      currentRow.params as keyof typeof secondaryOptionsObject
+                    ]
+                  }
+                  setSelected={handleParamValueChange}
+                  options={secondaryOptions}
                 />
-              </div>
-            </Fragment>
+              )}
+              <NumberInput
+                value={sheet[index]?.value || ""}
+                onChange={setNumberInput}
+                id={""}
+              />
+            </div>
           );
         })}
-      </div> */}
+      </div>
 
       {/* Add New Rule Row */}
-      {/* <div className="col-span-12 mt-8 flex justify-center transition-all">
-        <Button
-          className={
-            "transition-all duration-500 hover:scale-105 hover:shadow-xl"
-          }
-          onClick={() => {
-            setSheet([
-              ...sheet,
-              { key: "ehv", rule: "greater than", value: "0" },
-            ]);
-          }}
-        >
-          Add Rule
-        </Button>
-      </div> */}
+      {activeTab && (
+        <div className="col-span-12 mt-8 flex justify-center transition-all">
+          <Button
+            className={
+              "transition-all duration-500 hover:scale-105 hover:shadow-xl"
+            }
+            onClick={() => {
+              setSheet([
+                ...sheet,
+                { key: "ehv", rule: "greater than", value: "0" },
+              ]);
+            }}
+          >
+            Add Rule
+          </Button>
+        </div>
+      )}
 
       {/* New Buy Box Modal */}
-      <Modal open={newBuyBoxModalOpen} setOpen={setNewBuyBoxModalOpen} />
+      <Modal
+        orgId={orgId}
+        open={newBuyBoxModalOpen}
+        setOpen={setNewBuyBoxModalOpen}
+      />
       {/* Save Button */}
       {/* <Button
         className="absolute bottom-[-80px] right-0 hover:shadow-xl hover:transition-all"
