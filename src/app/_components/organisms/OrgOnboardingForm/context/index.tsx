@@ -75,7 +75,7 @@ export const OrgOnboardingProvider: React.FC<{
   // API CALLS
   const creatOrganization = api.org.create.useMutation({
     onSuccess: (x, y) => {
-      console.log("CREATE USER", x, y);
+      console.info("CREATE USER", x, y);
       router.refresh();
     },
     onError: (err) => {

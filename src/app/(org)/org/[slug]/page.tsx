@@ -13,8 +13,6 @@ export default async function Org({ params }: any) {
     slug: params.slug || "",
   });
 
-  console.log("ORG: ", org);
-
   if (!userProfile?.payload?.user?.id) {
     redirect("/onboard");
   }

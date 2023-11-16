@@ -22,7 +22,7 @@ export default async function Org({ params }: any) {
     redirect("/org/onboard");
   }
 
-  console.log("OR1G: ", org.payload.buyboxes[0]?.rules);
+  console.log("V: ", org.payload.buyboxes[0]?.rules);
 
   return (
     <main className="relative min-h-screen bg-zinc-50">
@@ -30,7 +30,11 @@ export default async function Org({ params }: any) {
       <div className="flex h-fit min-h-screen grow flex-col items-center md:ml-[105px]">
         <div className="relative grid w-full max-w-[1384px] grid-cols-12 justify-between gap-[16px] px-[20px] py-[32px] md:gap-[24px] md:p-[48px]">
           <Suspense fallback={<p>Loading feed...</p>}>
-            <Table orgId={org.payload.org.id} buyboxes={org.payload.buyboxes} />
+            <Table
+              orgId={org.payload.org.id}
+              buyboxes={org.payload.buyboxes}
+              other={org.payload.buyboxes}
+            />
           </Suspense>
         </div>
       </div>

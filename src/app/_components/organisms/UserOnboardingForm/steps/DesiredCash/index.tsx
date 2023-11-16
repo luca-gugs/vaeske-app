@@ -30,7 +30,7 @@ export const DesiredCash = () => {
   //   API CALLS
   const createUser = api.user.create.useMutation({
     onSuccess: (x, y) => {
-      console.log("CREATE USER", x, y);
+      console.info("CREATE USER", x, y);
       setUserMutationDone(true);
     },
     onError: (err) => {
@@ -39,7 +39,7 @@ export const DesiredCash = () => {
   });
   const createProperty = api.property.create.useMutation({
     onSuccess: (x, y, z) => {
-      console.log("CREATE PROPERTY: ", x, y);
+      console.info("CREATE PROPERTY: ", x, y);
       setPropertyMutationDone(true);
     },
     onError: (err) => {

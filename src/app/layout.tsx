@@ -6,6 +6,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { GeistSans } from "geist/font";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={GeistSans.className}>
           <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
+          <Toaster position="top-right" />
         </body>
       </html>
     </ClerkProvider>

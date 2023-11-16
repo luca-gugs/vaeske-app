@@ -36,7 +36,6 @@ export default function Modal({ open, orgId, setOpen, submit }: ModalProps) {
   });
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log("data", data.name);
     createBuyBox.mutate({ orgId: orgId, name: data.name });
   };
 

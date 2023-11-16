@@ -1,4 +1,3 @@
-// Table.tsx
 "use client";
 import React, {
   ChangeEventHandler,
@@ -11,9 +10,28 @@ import { stateCodes } from "~/app/_utils";
 import NumberInput from "~/app/_components/atoms/NumberInput";
 import Modal from "~/app/_components/atoms/Modals";
 import { Select } from "~/app/_components/atoms/Select";
-
+import { api } from "~/trpc/react";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 type TableProps = {
   orgId: string;
+  other: {
+    orgId: string;
+    id: number;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date | null;
+    rules?: {
+      id: number;
+      createdAt: Date;
+      updatedAt: Date | null;
+      buyBoxId: number;
+      key: string;
+      params: string;
+      value: string;
+      valueType: string;
+    }[];
+  }[];
   buyboxes: {
     orgId: string;
     id: number;
@@ -32,23 +50,33 @@ type TableProps = {
     }[];
   }[];
 };
-const Table = ({ orgId, buyboxes }: TableProps) => {
-  console.log("BUYBOXES: ", buyboxes);
+const Table = ({ orgId, buyboxes, other }: TableProps) => {
+  const router = useRouter();
 
-  const [activeTab, setActiveTab] = useState(buyboxes[0]?.name || null); // Initial active tab
+  const [activeTab, setActiveTab] = useState(
+    { name: buyboxes[0]?.name, id: buyboxes[0]?.id } || null,
+  ); // Initial active tab
   const [newBuyBoxModalOpen, setNewBuyBoxModalOpen] = useState(false);
-
+  // const [showSaveButton, setShowButton] = useState(false);
   const [sheet, setSheet] = useState<any[]>([]);
+  const [originalSheet, setOriginalSheet] = useState<any[]>([]);
 
-  const handleTabClick = (tabName: string) => {
-    setActiveTab(tabName);
+  const handleTabClick = (tabName: string, tabId: number) => {
+    setActiveTab({ name: tabName, id: tabId });
   };
 
   useEffect(() => {
     if (activeTab) {
-      const activeBuyBox = buyboxes.find((buybox) => buybox.name === activeTab);
-      if (activeBuyBox?.rules && activeBuyBox?.rules.length > 0) {
+      const activeBuyBox = buyboxes.find(
+        (buybox) => buybox.name === activeTab.name,
+      );
+      const buyBoxOriginal = other.find(
+        (buybox) => buybox.name === activeTab.name,
+      );
+
+      if (activeBuyBox?.rules && buyBoxOriginal?.rules) {
         setSheet(activeBuyBox?.rules);
+        setOriginalSheet(buyBoxOriginal?.rules);
       }
     }
   }, [activeTab]);
@@ -99,6 +127,20 @@ const Table = ({ orgId, buyboxes }: TableProps) => {
     },
   };
 
+  const createRule = api.rule.create.useMutation({
+    onSuccess: () => {
+      // router.refresh();
+      toast.success("Rule created!");
+    },
+    onError: () => {
+      toast.error("Something went wrong!");
+    },
+  });
+
+  const handleButtonClick = () => {
+    toast.success("You did it!"); // Displays a success message
+  };
+
   return (
     <>
       <div className="col-span-12 flex justify-between">
@@ -110,9 +152,9 @@ const Table = ({ orgId, buyboxes }: TableProps) => {
                 <div
                   key={idx}
                   className={`cursor-pointer border-b-2 px-4 py-2 ${
-                    activeTab === buybox.name ? "border-blue-500" : ""
+                    activeTab.name === buybox.name ? "border-blue-500" : ""
                   }`}
-                  onClick={() => handleTabClick(buybox.name)}
+                  onClick={() => handleTabClick(buybox.name, buybox.id)}
                 >
                   {buybox.name}
                 </div>
@@ -133,32 +175,30 @@ const Table = ({ orgId, buyboxes }: TableProps) => {
       <div className="col-span-12 grid w-full grid-cols-12">
         <div className="col-span-12 border px-4 py-2 font-bold">Rules</div>
         {sheet.map((currentRule, index) => {
-          let sheetCopy = sheet;
-          let currentRow = sheetCopy[index];
+          const originalRule = originalSheet[index];
 
-          console.log("currentRow", currentRow);
+          const showSave =
+            JSON.stringify(currentRule) !== JSON.stringify(originalRule);
 
           const secondaryOptions =
             primaryOptionsObject[
-              currentRow?.key as keyof typeof primaryOptionsObject
+              currentRule.key as keyof typeof primaryOptionsObject
             ].options;
 
           const setNumberInput = (value: string) => {
-            if (currentRow && currentRow !== undefined) {
-              currentRow.value = value;
-              const newSheet = sheetCopy.map((u, idx) =>
-                idx !== index ? u : currentRow,
-              );
-              setSheet(newSheet as any);
-            }
+            currentRule.value = value;
+            const newSheet = sheet.map((u, idx) =>
+              idx !== index ? u : currentRule,
+            );
+            setSheet(newSheet as any);
           };
 
           const handleKeyValueChange = (
             event: React.ChangeEvent<HTMLSelectElement>,
           ) => {
-            currentRow.key = event;
-            const newSheet = sheetCopy.map((u, idx) =>
-              idx !== index ? u : currentRow,
+            currentRule.key = event;
+            const newSheet = sheet.map((u, idx) =>
+              idx !== index ? u : currentRule,
             );
             setSheet(newSheet as any);
           };
@@ -166,22 +206,36 @@ const Table = ({ orgId, buyboxes }: TableProps) => {
           const handleParamValueChange = (
             event: React.ChangeEvent<HTMLSelectElement>,
           ) => {
-            currentRow.params = event;
-            const newSheet = sheetCopy.map((u, idx) =>
-              idx !== index ? u : currentRow,
+            currentRule.params = event;
+            const newSheet = sheet.map((u, idx) =>
+              idx !== index ? u : currentRule,
             );
             setSheet(newSheet as any);
+          };
+
+          const saveRule = (currentRule: any) => {
+            // console.log("CURRENT RULE: ", currentRule);
+            // console.log("BUYBOX ID: ", activeTab.id);
+            if (activeTab.id) {
+              createRule.mutate({
+                buyBoxId: activeTab.id,
+                key: currentRule.key,
+                params: currentRule.params,
+                value: currentRule.value,
+                valueType: currentRule.valueType,
+              });
+            }
           };
 
           return (
             <div
               key={index}
-              className="md:flex-col-row col-span-12 flex flex-col flex-wrap space-x-0 space-y-2 border px-4 py-2 md:items-center md:space-x-2 md:space-y-0"
+              className="md:flex-col-row col-span-12 flex flex-col flex-wrap space-x-0 space-y-2 border px-4 py-2 md:flex-row md:items-center md:space-x-2 md:space-y-0"
             >
               <Select
                 selected={
                   primaryOptionsObject[
-                    currentRow.key as keyof typeof primaryOptionsObject
+                    currentRule.key as keyof typeof primaryOptionsObject
                   ]
                 }
                 setSelected={handleKeyValueChange}
@@ -192,7 +246,7 @@ const Table = ({ orgId, buyboxes }: TableProps) => {
                 <Select
                   selected={
                     secondaryOptionsObject[
-                      currentRow.params as keyof typeof secondaryOptionsObject
+                      currentRule.params as keyof typeof secondaryOptionsObject
                     ]
                   }
                   setSelected={handleParamValueChange}
@@ -200,10 +254,19 @@ const Table = ({ orgId, buyboxes }: TableProps) => {
                 />
               )}
               <NumberInput
+                className="rounded-[6px] border-[1px] border-slate-300 p-[5px]"
                 value={sheet[index]?.value || ""}
                 onChange={setNumberInput}
                 id={""}
               />
+              {showSave && (
+                <Button
+                  className="!py-[7px] !text-sm"
+                  onClick={() => saveRule(currentRule)}
+                >
+                  Save
+                </Button>
+              )}
             </div>
           );
         })}
@@ -219,7 +282,12 @@ const Table = ({ orgId, buyboxes }: TableProps) => {
             onClick={() => {
               setSheet([
                 ...sheet,
-                { key: "ehv", rule: "greater than", value: "0" },
+                {
+                  key: "ehv",
+                  params: "greaterThan",
+                  value: "0",
+                  valueType: "number",
+                },
               ]);
             }}
           >

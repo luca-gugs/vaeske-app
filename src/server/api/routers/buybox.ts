@@ -56,7 +56,6 @@ export const buyBoxrouter = createTRPCRouter({
         const _buyboxes = await ctx.db.query.buyboxes.findMany({
           where: eq(buyboxes.orgId, input.orgId),
         });
-        console.log("buyboxes: ", _buyboxes);
         if (!_buyboxes) {
           throw new TRPCError({ code: "NOT_FOUND", message: "Org not found" });
         }
