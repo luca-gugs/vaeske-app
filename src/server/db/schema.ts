@@ -105,6 +105,13 @@ export const buyboxes = mysqlTable(
     id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
     orgId: varchar("orgId", { length: 256 }).notNull(),
     name: varchar("name", { length: 256 }).notNull(),
+    disallowedStates: varchar("disallowedStates", { length: 256 })
+      .notNull()
+      .default(""),
+    disallowedZips: varchar("disallowedZips", { length: 256 })
+      .notNull()
+      .default(""),
+
     // TimeStamps
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)

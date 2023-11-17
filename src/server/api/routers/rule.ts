@@ -50,4 +50,43 @@ export const ruleRouter = createTRPCRouter({
         };
       }
     }),
+
+  update: privateProcedure
+    .input(
+      z.object({
+        id: z.number().min(1),
+        buyBoxId: z.number().min(1),
+        key: z.string().min(1),
+        params: z.string().min(1),
+        value: z.string().min(1),
+        valueType: z.string().min(1),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      // simulate a slow db call -- pls use to test ux
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
+      try {
+        const test = await ctx.db
+          .update(rules)
+          .set({
+            ...input,
+          })
+          .where(eq(rules.id, input.id));
+        if (test.rowsAffected === 0) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Unable To Update Rule",
+          });
+        }
+        return {
+          payload: null,
+          isSuccess: true,
+        };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Unable To Update Rule",
+        });
+      }
+    }),
 });

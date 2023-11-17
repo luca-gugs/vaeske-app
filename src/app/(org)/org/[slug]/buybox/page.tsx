@@ -22,8 +22,6 @@ export default async function Org({ params }: any) {
     redirect("/org/onboard");
   }
 
-  console.log("V: ", org.payload.buyboxes[0]?.rules);
-
   return (
     <main className="relative min-h-screen bg-zinc-50">
       <ControlPanel />

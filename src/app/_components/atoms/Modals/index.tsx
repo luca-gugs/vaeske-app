@@ -5,6 +5,10 @@ import { Dialog, Transition } from "@headlessui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
+import MultiSelect from "../MultiSelect";
+import { stateCodes } from "~/app/_utils/scaffold";
+import { or } from "drizzle-orm";
+import MultiSelectDropdown from "../MultiSelect";
 
 type ModalProps = {
   open: boolean;
@@ -14,6 +18,8 @@ type ModalProps = {
 };
 
 export default function Modal({ open, orgId, setOpen, submit }: ModalProps) {
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+
   const router = useRouter();
 
   const cancelButtonRef = useRef(null);
@@ -36,7 +42,13 @@ export default function Modal({ open, orgId, setOpen, submit }: ModalProps) {
   });
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    createBuyBox.mutate({ orgId: orgId, name: data.name });
+    createBuyBox.mutate({
+      orgId: orgId,
+      name: data.name,
+      disallowedStates:
+        selectedOptions.length > 0 ? selectedOptions.join("%") : null,
+    });
+    // console.log("SELECTED OPTIONS: ", selectedOptions.join("%"));
   };
 
   return (
@@ -72,7 +84,7 @@ export default function Modal({ open, orgId, setOpen, submit }: ModalProps) {
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <form onSubmit={handleSubmit(onSubmit)}>
-                  <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                  <div className="h-[500px] bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="w-full sm:flex sm:items-start">
                       <div className="mt-3 w-full text-center sm:ml-4 sm:mt-0 sm:text-left">
                         <Dialog.Title
@@ -81,11 +93,25 @@ export default function Modal({ open, orgId, setOpen, submit }: ModalProps) {
                         >
                           Create New Buy Box
                         </Dialog.Title>
-                        <div className="mt-2 w-full">
+                        <div className="mt-2 flex w-full flex-col space-y-2">
                           <input
                             placeholder="Buy Box Name"
                             className="w-full rounded-lg border border-black px-4 py-2 focus:border-green-500 focus:outline-none"
                             {...register("name", { required: true })}
+                          />
+                          {selectedOptions.length > 0 && (
+                            <div className="flex rounded-md border-[1px] border-slate-200 p-1">
+                              {selectedOptions.map((option) => {
+                                return <div className="mr-1">{option}</div>;
+                              })}
+                            </div>
+                          )}
+                          <MultiSelectDropdown
+                            selectedOptions={selectedOptions}
+                            setSelectedOptions={setSelectedOptions}
+                            formFieldName={"test"}
+                            options={stateCodes}
+                            prompt={"Disallowed States List"}
                           />
                         </div>
                       </div>

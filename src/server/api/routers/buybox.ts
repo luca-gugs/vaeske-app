@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { TRPCError } from "@trpc/server";
@@ -23,6 +23,7 @@ export const buyBoxrouter = createTRPCRouter({
       z.object({
         orgId: z.string().min(1),
         name: z.string().min(1),
+        disallowedStates: z.string().min(1).nullable(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -32,12 +33,16 @@ export const buyBoxrouter = createTRPCRouter({
         const org = await ctx.db.insert(buyboxes).values({
           orgId: input.orgId,
           name: input.name,
+          disallowedStates: input.disallowedStates || "",
         });
+        console.log("ORG: ", org);
         return {
           payload: org,
           isSuccess: true,
         };
       } catch (error) {
+        console.log("Error: ", error);
+
         return {
           isSuccess: false,
           errorCode: "network_error",
@@ -68,6 +73,29 @@ export const buyBoxrouter = createTRPCRouter({
           isSuccess: false,
           errorCode: "network_error",
         };
+      }
+    }),
+  getByState: privateProcedure
+    .input(
+      z.object({
+        state: z.string().min(1),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const _buyboxes = await ctx.db.execute(
+          sql`select * from ${buyboxes} where ${buyboxes.disallowedStates} LIKE '%${input.state}%'`,
+        );
+        return {
+          payload: _buyboxes,
+          isSuccess: true,
+        };
+      } catch (error) {
+        console.log('ERROR:"', error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Error Occured While Finding Buyboxes By State",
+        });
       }
     }),
 });
