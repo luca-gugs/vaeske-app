@@ -4,14 +4,17 @@ type BuyBox = {
   name: string;
   createdAt: Date;
   updatedAt: Date | null;
-  rules?: {
-    id: number;
-    createdAt: Date;
-    updatedAt: Date | null;
-    buyBoxId: number;
-    key: string;
-    params: string;
-    value: string;
-    valueType: string;
-  }[];
+  disallowedStates?: string;
+  rules?: Rule[];
+};
+
+type Rule = {
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date | null;
+  buyBoxId: number;
+  key: string;
+  params: string;
+  value: string;
+  valueType: string;
 };

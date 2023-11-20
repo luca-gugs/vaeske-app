@@ -48,7 +48,6 @@ export default function Modal({ open, orgId, setOpen, submit }: ModalProps) {
       disallowedStates:
         selectedOptions.length > 0 ? selectedOptions.join("%") : null,
     });
-    // console.log("SELECTED OPTIONS: ", selectedOptions.join("%"));
   };
 
   return (

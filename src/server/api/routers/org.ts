@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { TRPCError } from "@trpc/server";
@@ -81,6 +81,7 @@ export const orgRouter = createTRPCRouter({
         if (input.getBuyBoxes) {
           _buyboxes = await ctx.db.query.buyboxes.findMany({
             where: eq(buyboxes.orgId, org.id),
+            orderBy: [desc(buyboxes.createdAt)],
           });
 
           for (let i = 0; i < _buyboxes.length; i++) {

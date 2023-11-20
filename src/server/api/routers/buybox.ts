@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { asc, desc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { TRPCError } from "@trpc/server";
@@ -35,13 +35,12 @@ export const buyBoxrouter = createTRPCRouter({
           name: input.name,
           disallowedStates: input.disallowedStates || "",
         });
-        console.log("ORG: ", org);
         return {
           payload: org,
           isSuccess: true,
         };
       } catch (error) {
-        console.log("Error: ", error);
+        console.error("Error: ", error);
 
         return {
           isSuccess: false,
@@ -60,6 +59,7 @@ export const buyBoxrouter = createTRPCRouter({
       try {
         const _buyboxes = await ctx.db.query.buyboxes.findMany({
           where: eq(buyboxes.orgId, input.orgId),
+          orderBy: [desc(buyboxes.updatedAt)],
         });
         if (!_buyboxes) {
           throw new TRPCError({ code: "NOT_FOUND", message: "Org not found" });
@@ -91,7 +91,7 @@ export const buyBoxrouter = createTRPCRouter({
           isSuccess: true,
         };
       } catch (error) {
-        console.log('ERROR:"', error);
+        console.error('ERROR:"', error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Error Occured While Finding Buyboxes By State",
