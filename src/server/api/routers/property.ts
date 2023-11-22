@@ -1,14 +1,7 @@
-import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-import {
-  createTRPCRouter,
-  privateProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
-import { posts, users, propertys } from "~/server/db/schema";
-import { clerkClient } from "@clerk/nextjs/server";
-import StreetAddress from "../../../app/_components/organisms/UserOnboardingForm/steps/StreetAddress/index";
+import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
+import { propertys } from "~/server/db/schema";
 
 export const propertyRouter = createTRPCRouter({
   create: privateProcedure

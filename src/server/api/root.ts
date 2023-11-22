@@ -5,6 +5,7 @@ import { propertyRouter } from "./routers/property";
 import { orgRouter } from "./routers/org";
 import { buyBoxrouter } from "./routers/buybox";
 import { ruleRouter } from "./routers/rule";
+import { matchRouter } from "./routers/match";
 
 /**
  * This is the primary router for your server.
@@ -13,6 +14,7 @@ import { ruleRouter } from "./routers/rule";
  */
 export const appRouter = createTRPCRouter({
   buybox: buyBoxrouter,
+  match: matchRouter,
   org: orgRouter,
   post: postRouter,
   property: propertyRouter,

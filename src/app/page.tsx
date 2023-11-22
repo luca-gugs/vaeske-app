@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ClientComponent } from "./_components/atoms/ExampleClientComp";
 import Image from "next/image";
 import Link from "next/link";
+import { PropertyCards } from "./_components/atoms/PropertyCard";
 export default async function Dashboard() {
   const userProfile = await api.user.getCurrent.query({ getProperties: true });
 
@@ -36,38 +37,7 @@ export default async function Dashboard() {
             <div className="col-span-12 flex flex-col items-center space-y-4 md:flex-row md:space-x-10 md:space-y-0">
               <h2 className="text-2xl font-medium">Your Properties:</h2>
             </div>
-            {properties?.map((property) => {
-              return (
-                <div
-                  className="col-span-12 space-y-2 rounded-xl border-[1px] border-slate-300 bg-white p-4 md:col-span-6 lg:col-span-4"
-                  key={property.id}
-                >
-                  <div className="space-between flex">
-                    <span>Addr:</span>
-                    <span>
-                      {property?.streetAddress}, {property?.city},{" "}
-                      {property?.state}, {property?.zip}
-                    </span>
-                  </div>
-                  <div className="space-between flex">
-                    <span>EHV:</span>
-                    <span>{property?.ehv}</span>
-                  </div>
-                  <div className="space-between flex">
-                    <span>MB:</span>
-                    <span>{property?.mb}</span>
-                  </div>
-                  <div className="space-between flex">
-                    <span>LTV:</span>
-                    <span>{property?.ltv}</span>
-                  </div>
-                  <div className="space-between flex">
-                    <span>Liens:</span>
-                    <span>{property?.liens}</span>
-                  </div>
-                </div>
-              );
-            })}
+            <PropertyCards properties={properties} />
             <Link
               href="#"
               className="col-span-6 flex flex-col items-center justify-center space-y-2 overflow-hidden rounded-xl border-[1px] border-slate-300 bg-white p-4 transition-all hover:scale-105 hover:shadow-xl lg:col-span-4"

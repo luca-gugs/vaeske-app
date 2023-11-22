@@ -142,3 +142,24 @@ export const rules = mysqlTable(
     buyBoxIdIndex: index("buyBoxId_idx").on(example.buyBoxId),
   }),
 );
+
+export const matches = mysqlTable(
+  "match",
+  {
+    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+    buyBoxId: bigint("buyBoxId", { mode: "number" }).notNull(),
+    orgId: varchar("orgId", { length: 256 }).notNull(),
+    propertyId: bigint("propertyId", { mode: "number" }).notNull().unique(),
+
+    // TimeStamps
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt").onUpdateNow(),
+  },
+  (example) => ({
+    buyBoxIdIndex: index("buyBoxId_idx").on(example.buyBoxId),
+    orgIdIndex: index("orgId_idx").on(example.orgId),
+    propertyId: index("propertyId_idx").on(example.propertyId),
+  }),
+);
