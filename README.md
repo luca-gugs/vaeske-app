@@ -13,6 +13,6 @@ Væske is a two sided marketplace brining together home owners and Home Equity I
 
 - [Next.js](https://nextjs.org)
 - [Clerk](https://clerk.com/)
-- [Prisma](https://prisma.io)
+- [Drizzle ORM](https://orm.drizzle.team/)
 - [Tailwind CSS](https://tailwindcss.com)
 - [tRPC](https://trpc.io)
