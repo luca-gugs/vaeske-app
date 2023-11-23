@@ -6,7 +6,7 @@ import {
   privateProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { posts, users, propertys } from "~/server/db/schema";
+import { posts, users, propertys, matches } from "~/server/db/schema";
 import { clerkClient } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
 
@@ -74,12 +74,26 @@ export const userRouter = createTRPCRouter({
           mb: number | null;
           ltv: number | null;
           liens: number | null;
+          matchCount?: number;
         }[] = [];
 
         if (input?.getProperties) {
           properties = await ctx.db.query.propertys.findMany({
             where: eq(propertys.userId, user?.id ?? "1"),
           });
+
+          const counts = await Promise.all(
+            properties.map(async (property) => {
+              const propertyId = property.id;
+              const matchingMatches = await ctx.db.query.matches.findMany({
+                where: eq(matches.propertyId, propertyId),
+              });
+
+              const matchCount = matchingMatches.length || 0;
+              property.matchCount = matchCount;
+              return property;
+            }),
+          );
         }
 
         return {

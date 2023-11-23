@@ -8,6 +8,7 @@ import {
   index,
   mysqlTableCreator,
   timestamp,
+  unique,
   varchar,
 } from "drizzle-orm/mysql-core";
 
@@ -73,6 +74,15 @@ export const propertys = mysqlTable(
     mb: bigint("mb", { mode: "number" }),
     ltv: float("ltv"),
     liens: bigint("liens", { mode: "number" }),
+
+    //Other
+    matches: bigint("matches", { mode: "number" }),
+
+    // TimeStamps
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt").onUpdateNow(),
   },
   (table) => ({
     nameIndex: index("name_idx").on(table.userId),
@@ -149,7 +159,7 @@ export const matches = mysqlTable(
     id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
     buyBoxId: bigint("buyBoxId", { mode: "number" }).notNull(),
     orgId: varchar("orgId", { length: 256 }).notNull(),
-    propertyId: bigint("propertyId", { mode: "number" }).notNull().unique(),
+    propertyId: bigint("propertyId", { mode: "number" }).notNull(),
 
     // TimeStamps
     createdAt: timestamp("created_at")
@@ -161,5 +171,6 @@ export const matches = mysqlTable(
     buyBoxIdIndex: index("buyBoxId_idx").on(example.buyBoxId),
     orgIdIndex: index("orgId_idx").on(example.orgId),
     propertyId: index("propertyId_idx").on(example.propertyId),
+    unq: unique().on(example.buyBoxId, example.propertyId),
   }),
 );

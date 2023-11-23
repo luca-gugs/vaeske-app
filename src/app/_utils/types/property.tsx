@@ -11,4 +11,6 @@ type Property = {
   mb: number | null;
   ltv: number | null;
   liens: number | null;
+  createdAt?: Date;
+  matchCount?: number;
 };
